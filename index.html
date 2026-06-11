@@ -37,18 +37,21 @@
    Strict palette. No deviation. All accents earned, never decorative.
 ==================================================================== */
 :root{
-  /* Color */
+  /* Color — strict black & white, like the logo itself */
   --bg:        #0a0a0a;   /* near-black, midnight Compton            */
-  --gold:      #f5c518;   /* old gold, a chain under a streetlight   */
-  --red:       #e63946;   /* blood red, spray can on a wall          */
+  --surface:   #111111;   /* lifted black for cards                  */
   --text:      #f0f0f0;   /* off-white                               */
   --muted:     #888888;   /* concrete gray                           */
-  --surface:   #111111;   /* lifted black for cards                  */
+  --white:     #ffffff;   /* the only accent — used sparingly        */
   --border:    #222222;   /* a tag fading on brick                   */
+  --tile:      #ededed;   /* light product-image tile                */
+  --line:      rgba(255,255,255,0.60); /* hover border               */
 
-  --gold-soft: rgba(245,197,24,0.30);
-  --gold-glow: rgba(245,197,24,0.45);
-  --red-glow:  rgba(230,57,70,0.35);
+  /* Back-compat aliases — any stray reference renders monochrome */
+  --gold: #ffffff; --red: #ffffff;
+  --gold-soft: rgba(255,255,255,0.28);
+  --gold-glow: rgba(255,255,255,0.22);
+  --red-glow:  rgba(255,255,255,0.18);
 
   /* Type */
   --f-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
@@ -56,9 +59,9 @@
   --f-body:    'DM Sans', system-ui, sans-serif;
 
   /* Space */
-  --maxw: 1280px;
+  --maxw: 1320px;
   --gut: clamp(20px, 5vw, 64px);
-  --nav-h: 74px;
+  --nav-h: 72px;
 
   /* Motion */
   --ease: cubic-bezier(.16,1,.3,1);
@@ -87,88 +90,45 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 input,textarea,select{ font-family:inherit; font-size:16px; }
 ul{ list-style:none; }
 
-::selection{ background:var(--gold); color:#000; }
+::selection{ background:var(--white); color:#000; }
 ::-webkit-scrollbar{ width:10px; height:10px; }
 ::-webkit-scrollbar-track{ background:#080808; }
 ::-webkit-scrollbar-thumb{ background:#2a2a2a; border:2px solid #080808; }
-::-webkit-scrollbar-thumb:hover{ background:var(--gold); }
+::-webkit-scrollbar-thumb:hover{ background:var(--white); }
 
 .container{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gut); }
 
 /* Display / accent helpers */
 .display{ font-family:var(--f-display); font-weight:400; letter-spacing:.06em; line-height:.92; }
 .marker{ font-family:var(--f-accent); }
-.gold{ color:var(--gold); }
-.red{ color:var(--red); }
+.gold{ color:var(--white); }
+.red{ color:var(--white); }
 .muted{ color:var(--muted); }
 .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 
-/* ====================================================================
-   ATMOSPHERE — grain overlay + brick wall texture (CSS / SVG only)
-==================================================================== */
-/* Fixed film grain across the whole site */
-.grain{
-  position:fixed; inset:0; z-index:9999; pointer-events:none;
-  opacity:.045; mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Rough brick / concrete wall — layered repeating gradients, no image */
-.brick{
-  background-color:#0b0b0c;
-  background-image:
-    /* large vignette for depth */
-    radial-gradient(120% 90% at 50% -10%, rgba(245,197,24,.05), transparent 55%),
-    radial-gradient(120% 120% at 50% 120%, rgba(0,0,0,.85), transparent 60%),
-    /* horizontal mortar lines */
-    repeating-linear-gradient(0deg, rgba(0,0,0,.55) 0 2px, transparent 2px 64px),
-    /* vertical mortar lines */
-    repeating-linear-gradient(90deg, rgba(0,0,0,.55) 0 2px, transparent 2px 132px),
-    /* offset brick rows (every other row pushed half a brick) */
-    repeating-linear-gradient(90deg, transparent 0 66px, rgba(255,255,255,.012) 66px 68px, transparent 68px 132px),
-    /* rough tonal noise via crossing diagonals */
-    repeating-linear-gradient(57deg, rgba(255,255,255,.015) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(-33deg, rgba(0,0,0,.25) 0 1px, transparent 1px 7px);
-  background-blend-mode:normal;
-}
-
-/* Spray-paint divider between sections */
-.spray-divider{ position:relative; height:78px; overflow:hidden; }
-.spray-divider::before{
-  content:""; position:absolute; left:-4%; right:-4%; top:50%;
-  height:2px; background:var(--gold); opacity:.55; transform:rotate(-1.1deg);
-  box-shadow:0 0 14px var(--gold-glow);
-}
-.spray-divider::after{
-  content:""; position:absolute; inset:0; opacity:.9;
-  background:
-    radial-gradient(circle at 9% 38%, var(--gold-soft) 0 2px, transparent 3px),
-    radial-gradient(circle at 13% 62%, rgba(245,197,24,.18) 0 1.5px, transparent 2px),
-    radial-gradient(circle at 22% 30%, rgba(245,197,24,.12) 0 1px, transparent 2px),
-    radial-gradient(circle at 78% 64%, rgba(230,57,70,.20) 0 2px, transparent 3px),
-    radial-gradient(circle at 86% 40%, rgba(230,57,70,.14) 0 1.5px, transparent 2px),
-    radial-gradient(circle at 67% 36%, rgba(245,197,24,.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 50% 70%, rgba(245,197,24,.10) 0 1.5px, transparent 2px);
-}
+/* The black-bg logo sits seamlessly on the black site via screen blend
+   (black backdrop drops out, white dripping letters stay). */
+.logo-blend{ mix-blend-mode:screen; }
 
 /* ====================================================================
    BUTTONS — square edges, street aesthetic
 ==================================================================== */
 .btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:.55em;
-  font-family:var(--f-display); font-size:1.18rem; letter-spacing:.12em;
-  padding:1rem 2.1rem; border:1px solid transparent; border-radius:0;
-  text-transform:uppercase; transition:.28s var(--ease); position:relative; white-space:nowrap;
+  display:inline-flex; align-items:center; justify-content:center; gap:.6em;
+  font-family:var(--f-display); font-size:1.16rem; letter-spacing:.18em;
+  padding:.95rem 2.1rem; border:1px solid transparent; border-radius:0;
+  text-transform:uppercase; transition:background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease); position:relative; white-space:nowrap;
 }
 .btn svg{ width:1.05em; height:1.05em; }
-.btn-gold{ background:var(--gold); color:#000; }
-.btn-gold:hover{ background:#ffd633; box-shadow:0 10px 30px -8px var(--gold-glow); transform:translateY(-2px); }
-.btn-red{ background:var(--red); color:#fff; }
-.btn-red:hover{ background:#ff4d5a; box-shadow:0 10px 30px -8px var(--red-glow); transform:translateY(-2px); }
-.btn-red-outline{ background:transparent; color:var(--red); border-color:var(--red); }
-.btn-red-outline:hover{ background:var(--red); color:#fff; box-shadow:0 0 26px -6px var(--red-glow); }
-.btn-ghost{ background:transparent; color:var(--text); border-color:var(--border); }
-.btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
+/* primary — black bg, white border/text; inverts on hover */
+.btn-gold{ background:transparent; color:var(--white); border-color:var(--white); }
+.btn-gold:hover{ background:var(--white); color:#000; }
+/* secondary outline (kept class names; same language) */
+.btn-red,.btn-red-outline{ background:transparent; color:var(--white); border-color:rgba(255,255,255,.35); }
+.btn-red:hover,.btn-red-outline:hover{ background:var(--white); color:#000; border-color:var(--white); }
+/* ghost — dim until hover */
+.btn-ghost{ background:transparent; color:var(--muted); border-color:var(--border); }
+.btn-ghost:hover{ border-color:var(--white); color:var(--white); }
 .btn-block{ width:100%; }
 
 /* ====================================================================
@@ -176,45 +136,42 @@ ul{ list-style:none; }
 ==================================================================== */
 .nav{
   position:sticky; top:0; z-index:600;
-  background:var(--bg); border-bottom:1px solid var(--border);
-  height:var(--nav-h);
+  background:var(--bg); border-bottom:1px solid transparent;
+  height:var(--nav-h); transition:border-color .35s ease;
 }
+.nav.scrolled{ border-bottom-color:var(--border); }
 .nav-inner{ height:100%; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; }
 .nav-logo{ display:flex; align-items:center; gap:.6rem; }
-.nav-logo img{ height:46px; width:auto; }
-.nav-links{ display:flex; align-items:center; gap:2.2rem; margin-left:auto; }
+.nav-logo img{ height:40px; width:auto; }
+.nav-links{ display:flex; align-items:center; gap:2.4rem; margin-left:auto; }
 .nav-link{
-  font-family:var(--f-display); font-size:1.32rem; letter-spacing:.14em;
+  font-family:var(--f-display); font-size:1.28rem; letter-spacing:.18em;
   text-transform:uppercase; color:var(--text); position:relative; padding:.2rem 0;
-  transition:color .25s var(--ease);
 }
 .nav-link::after{
-  content:""; position:absolute; left:0; bottom:-3px; height:3px; width:100%;
-  background:var(--gold); transform:scaleX(0); transform-origin:left;
-  transition:transform .3s var(--ease);
-  /* ragged spray-edge underline */
-  clip-path:polygon(0 30%,6% 0,14% 60%,22% 10%,33% 70%,44% 0,55% 65%,66% 15%,78% 70%,88% 5%,96% 60%,100% 20%,100% 100%,0 100%);
+  content:""; position:absolute; left:0; bottom:-2px; height:1px; width:100%;
+  background:var(--white); transform:scaleX(0); transform-origin:left;
+  transition:transform .4s var(--ease);
 }
-.nav-link:hover{ color:var(--gold); }
 .nav-link:hover::after{ transform:scaleX(1); }
 
 .nav-actions{ display:flex; align-items:center; gap:1rem; }
 .lang-toggle{
   display:flex; border:1px solid var(--border); border-radius:0; overflow:hidden;
-  font-family:var(--f-display); font-size:1.05rem; letter-spacing:.1em;
+  font-family:var(--f-display); font-size:1.02rem; letter-spacing:.12em;
 }
-.lang-toggle button{ padding:.4rem .7rem; color:var(--muted); transition:.2s; }
-.lang-toggle button.active{ background:var(--gold); color:#000; }
+.lang-toggle button{ padding:.38rem .72rem; color:var(--muted); transition:.25s var(--ease); }
+.lang-toggle button.active{ background:var(--white); color:#000; }
 .lang-toggle button:not(.active):hover{ color:var(--text); }
 
-.cart-btn{ position:relative; display:grid; place-items:center; width:44px; height:44px; border:1px solid var(--border); transition:.25s var(--ease); }
-.cart-btn:hover{ border-color:var(--gold); color:var(--gold); }
+.cart-btn{ position:relative; display:grid; place-items:center; width:44px; height:44px; border:1px solid var(--border); transition:.3s var(--ease); }
+.cart-btn:hover{ border-color:var(--white); }
 .cart-btn svg{ width:22px; height:22px; }
 .cart-count{
   position:absolute; top:-9px; right:-9px; min-width:21px; height:21px; padding:0 5px;
-  background:var(--red); color:#fff; border-radius:999px; font-family:var(--f-body); font-weight:700;
+  background:var(--white); color:#000; border-radius:999px; font-family:var(--f-body); font-weight:700;
   font-size:.72rem; display:grid; place-items:center; line-height:1; box-shadow:0 0 0 2px var(--bg);
-  transform:scale(0); transition:transform .3s var(--ease);
+  transform:scale(0); transition:transform .35s var(--ease);
 }
 .cart-count.show{ transform:scale(1); }
 
@@ -224,250 +181,205 @@ ul{ list-style:none; }
 /* Mobile full-screen nav overlay */
 .mnav{
   position:fixed; inset:0; z-index:700; background:#070707;
-  display:flex; flex-direction:column; padding:2rem var(--gut);
-  transform:translateY(-100%); transition:transform .5s var(--ease); will-change:transform;
+  display:flex; flex-direction:column; padding:1.4rem var(--gut) 2rem;
+  transform:translateY(-100%); transition:transform .55s var(--ease); will-change:transform;
 }
 .mnav.open{ transform:translateY(0); }
 .mnav-top{ display:flex; align-items:center; justify-content:space-between; }
-.mnav-top img{ height:42px; }
-.mnav-close{ width:46px; height:46px; display:grid; place-items:center; border:1px solid var(--border); }
+.mnav-top img{ height:38px; }
+.mnav-close{ width:46px; height:46px; display:grid; place-items:center; border:1px solid var(--border); transition:.25s; }
+.mnav-close:hover{ border-color:var(--white); }
 .mnav-close svg{ width:24px; height:24px; }
-.mnav-links{ margin:auto 0; display:flex; flex-direction:column; gap:.4rem; }
+.mnav-links{ margin:auto 0; display:flex; flex-direction:column; gap:.2rem; }
 .mnav-links a{
-  font-family:var(--f-display); font-size:clamp(2.6rem,12vw,4.4rem); letter-spacing:.05em;
-  text-transform:uppercase; line-height:1; padding:.3rem 0; color:var(--text);
-  border-bottom:1px solid var(--border); transition:.25s;
+  font-family:var(--f-display); font-size:clamp(2.8rem,13vw,4.6rem); letter-spacing:.04em;
+  text-transform:uppercase; line-height:1.02; padding:.35rem 0; color:var(--text);
+  border-bottom:1px solid var(--border); transition:.3s var(--ease);
 }
-.mnav-links a:hover{ color:var(--gold); padding-left:.6rem; }
+.mnav-links a:hover{ padding-left:.7rem; color:var(--white); }
 .mnav-foot{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:1.5rem; }
 
 /* ====================================================================
    HERO
 ==================================================================== */
-.hero{ position:relative; min-height:100svh; display:flex; align-items:center; overflow:hidden; }
-.hero-overlay{ position:absolute; inset:0; background:
-  linear-gradient(180deg, rgba(10,10,10,.55) 0%, rgba(10,10,10,.78) 60%, var(--bg) 100%),
-  radial-gradient(80% 60% at 18% 30%, rgba(245,197,24,.07), transparent 60%); }
-.hero-inner{ position:relative; z-index:2; padding-block:clamp(3rem,10vh,7rem); width:100%; }
-.hero-eyebrow{
-  font-family:var(--f-accent); color:var(--gold); font-size:clamp(1rem,2.4vw,1.4rem);
-  transform:rotate(-2deg); display:inline-block; margin-bottom:1.2rem;
-  text-shadow:0 2px 14px rgba(245,197,24,.25);
+.hero{
+  position:relative; min-height:100svh; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  padding:calc(var(--nav-h) + 2rem) var(--gut) 5rem;
 }
-.hero h1{ font-family:var(--f-display); font-weight:400; letter-spacing:.02em; }
-.hero-line{ display:block; line-height:.86; font-size:clamp(4.2rem,15vw,15rem); }
-.hero-line .outline{
-  color:transparent; -webkit-text-stroke:2px var(--text);
+/* one restrained atmospheric touch — a faint monochrome halo behind the logo */
+.hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(60% 50% at 50% 38%, rgba(255,255,255,.05), transparent 70%);
 }
-.hero-line.l2{ color:var(--gold); position:relative; width:max-content; }
-.hero-line.l2::after{
-  content:""; position:absolute; left:0; bottom:.04em; width:100%; height:.09em;
-  background:var(--red); transform:rotate(-1deg);
-  clip-path:polygon(0 20%,5% 0,12% 55%,20% 5%,30% 60%,42% 0,54% 55%,65% 10%,77% 60%,88% 0,96% 50%,100% 15%,100% 100%,0 100%);
-}
-.hero-tag{ font-style:italic; font-size:clamp(1rem,2.5vw,1.5rem); color:var(--text); margin-top:1.6rem; max-width:34ch; opacity:.9; }
-.hero-cta{ margin-top:2.4rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
-.hero-scroll{ position:absolute; left:50%; bottom:1.4rem; transform:translateX(-50%); z-index:2;
-  font-family:var(--f-display); letter-spacing:.2em; color:var(--muted); font-size:.95rem; text-align:center; }
-.hero-scroll .line{ width:1px; height:46px; background:linear-gradient(var(--gold),transparent); margin:.5rem auto 0; animation:scrolly 1.8s var(--ease) infinite; transform-origin:top; }
-@keyframes scrolly{ 0%{ transform:scaleY(0); } 40%{ transform:scaleY(1);} 100%{ transform:scaleY(0); transform-origin:bottom;} }
-
-/* Floating gold chain (CSS/SVG) */
-.chain{ position:absolute; z-index:1; right:6%; top:8%; width:clamp(120px,18vw,260px); opacity:.5; animation:floaty 6s ease-in-out infinite; filter:drop-shadow(0 8px 24px rgba(245,197,24,.25)); }
-.chain.two{ right:auto; left:4%; bottom:14%; top:auto; width:clamp(90px,12vw,180px); opacity:.32; animation-duration:7.5s; animation-delay:-2s; }
-@keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(-3deg);} 50%{ transform:translateY(-22px) rotate(2deg);} }
-
-/* ====================================================================
-   MARQUEE TICKER
-==================================================================== */
-.marquee{ background:#000; border-block:1px solid var(--border); overflow:hidden; padding:.7rem 0; }
-.marquee-track{ display:flex; gap:0; width:max-content; animation:marq 26s linear infinite; }
-.marquee:hover .marquee-track{ animation-play-state:paused; }
-.marquee span{ font-family:var(--f-display); font-size:1.5rem; letter-spacing:.18em; color:var(--gold); padding-inline:1.1rem; white-space:nowrap; }
-.marquee span.dot{ color:var(--red); }
-@keyframes marq{ to{ transform:translateX(-50%); } }
+.hero > *{ position:relative; z-index:2; }
+.hero-logo{ width:clamp(190px,32vw,440px); height:auto; margin:0 auto clamp(1.4rem,3.5vw,2.4rem); }
+.hero h1{ font-family:var(--f-display); font-weight:400; letter-spacing:.015em; color:var(--white); }
+.hero-line{ display:block; line-height:.88; font-size:clamp(2.5rem,9vw,8.4rem); }
+.hero-line.l2{ color:var(--white); }
+.hero-tag{ font-style:italic; font-family:var(--f-body); font-size:clamp(1rem,2.2vw,1.4rem); color:var(--muted); margin-top:clamp(1.2rem,3vw,1.8rem); }
+.hero-cta{ margin-top:clamp(1.8rem,4vw,2.6rem); display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:center; }
+.hero-scroll{ position:absolute; left:50%; bottom:1.6rem; transform:translateX(-50%); z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:.5rem;
+  font-family:var(--f-display); letter-spacing:.28em; color:var(--muted); font-size:.85rem; transition:color .3s; }
+.hero-scroll:hover{ color:var(--white); }
+.hero-scroll .arrow{ width:1px; height:42px; background:linear-gradient(var(--white),transparent); animation:scrolly 1.9s var(--ease) infinite; transform-origin:top; }
+@keyframes scrolly{ 0%{ transform:scaleY(0); } 45%{ transform:scaleY(1);} 100%{ transform:scaleY(0); transform-origin:bottom;} }
 
 /* ====================================================================
    SECTION SHELL
 ==================================================================== */
-.section{ position:relative; padding-block:clamp(4rem,9vw,7.5rem); }
-.section-head{ margin-bottom:3rem; }
-.eyebrow{ font-family:var(--f-accent); color:var(--red); font-size:1.05rem; transform:rotate(-1.5deg); display:inline-block; margin-bottom:.7rem; }
-.section-title{ font-family:var(--f-display); font-size:clamp(2.8rem,8vw,6rem); letter-spacing:.04em; line-height:.9; }
-.section-sub{ color:var(--muted); max-width:52ch; margin-top:1rem; }
-
-/* Diagonal cut wrapper */
-.angle{ position:relative; }
-.angle::before{
-  content:""; position:absolute; left:0; right:0; top:-1px; height:60px; background:var(--bg);
-  clip-path:polygon(0 0,100% 0,100% 0,0 100%); z-index:1; pointer-events:none;
-}
+.section{ position:relative; padding-block:clamp(4.5rem,10vw,8rem); }
+.section-head{ margin-bottom:clamp(2.4rem,5vw,3.6rem); }
+.eyebrow{ font-family:var(--f-body); color:var(--muted); font-size:.78rem; letter-spacing:.35em; text-transform:uppercase; display:block; margin-bottom:1rem; }
+.section-title{ font-family:var(--f-display); font-size:clamp(2.8rem,8vw,6.5rem); letter-spacing:.03em; line-height:.9; color:var(--white); }
+.section-sub{ color:var(--muted); max-width:54ch; margin-top:1.1rem; }
 
 /* ====================================================================
    CATALOG  — filter bar + grid + cards
 ==================================================================== */
-.filter-bar{ display:flex; flex-wrap:wrap; gap:.4rem 1.8rem; align-items:center; margin-bottom:2.6rem; border-bottom:1px solid var(--border); padding-bottom:1.2rem; }
+.filter-bar{ display:flex; flex-wrap:wrap; gap:.4rem 1.9rem; align-items:center; margin-bottom:2.6rem; border-bottom:1px solid var(--border); padding-bottom:1.1rem; }
 .filter-pill{
-  font-family:var(--f-display); font-size:1.4rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--muted); position:relative; padding:.25rem .1rem; transition:color .25s var(--ease);
+  font-family:var(--f-display); font-size:1.35rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); position:relative; padding:.2rem .1rem; transition:color .3s var(--ease);
 }
 .filter-pill::after{
-  content:""; position:absolute; left:0; right:0; bottom:-1.25rem; height:3px; background:var(--gold);
-  transform:scaleX(0); transform-origin:left; transition:transform .32s var(--ease);
-  clip-path:polygon(0 30%,6% 0,14% 60%,22% 10%,33% 70%,44% 0,55% 65%,66% 15%,78% 70%,88% 5%,96% 60%,100% 20%,100% 100%,0 100%);
+  content:""; position:absolute; left:0; right:0; bottom:-1.15rem; height:2px; background:var(--white);
+  transform:scaleX(0); transform-origin:left; transition:transform .4s var(--ease);
 }
 .filter-pill:hover{ color:var(--text); }
-.filter-pill.active{ color:var(--gold); }
+.filter-pill.active{ color:var(--white); }
 .filter-pill.active::after{ transform:scaleX(1); }
-.filter-count{ margin-left:auto; font-family:var(--f-display); letter-spacing:.1em; color:var(--muted); font-size:1.1rem; }
+.filter-count{ margin-left:auto; font-family:var(--f-body); letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-size:.78rem; }
 
-.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; }
+.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
 
 .card{
-  position:relative; background:var(--surface); border:1px solid var(--gold-soft);
-  padding:1.1rem; transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
-  display:flex; flex-direction:column;
+  position:relative; background:var(--surface); border:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+  transition:transform .5s var(--ease), border-color .4s var(--ease), box-shadow .5s var(--ease);
 }
-/* gold corner brackets [ ] */
-.card::before,.card::after{
-  position:absolute; font-family:var(--f-display); color:var(--gold); font-size:2.4rem; line-height:.5;
-  opacity:.85; transition:opacity .35s var(--ease); pointer-events:none;
-}
-.card::before{ content:"["; top:.55rem; left:.55rem; }
-.card::after{ content:"]"; bottom:.2rem; right:.6rem; }
-.card:hover{ transform:translateY(-7px); border-color:var(--gold); box-shadow:0 22px 50px -24px var(--red-glow), 0 0 0 1px var(--gold); }
-.card:hover::before,.card:hover::after{ opacity:1; }
+.card:hover{ transform:translateY(-4px); border-color:var(--line); box-shadow:0 22px 48px -28px rgba(0,0,0,.95); }
 
-.card-media{ position:relative; aspect-ratio:1/1.05; background:#0c0c0c; overflow:hidden; margin-bottom:1rem; border:1px solid var(--border); }
-.card-media img{ width:100%; height:100%; object-fit:contain; padding:.6rem; transition:transform .5s var(--ease); }
-.card:hover .card-media img{ transform:scale(1.04); }
+/* light product tile — white-bg photos melt into it via multiply */
+.card-media{ position:relative; aspect-ratio:1/1.05; background:var(--tile); overflow:hidden; }
+.card-media img{ width:100%; height:100%; object-fit:contain; padding:1.4rem; mix-blend-mode:multiply; transition:transform .6s var(--ease); }
+.card:hover .card-media img{ transform:scale(1.05); }
 
-.badge{
-  font-family:var(--f-accent); font-size:.78rem; letter-spacing:.02em; text-transform:uppercase;
-  padding:.3rem .7rem; display:inline-block; transform:rotate(-2deg); line-height:1.2;
-}
-.badge-cat{ position:absolute; top:.6rem; left:.6rem; z-index:2; color:#000; }
-.badge-designer{ background:var(--gold); color:#000; }
-.badge-niche{ background:#e9e2d2; color:#000; }
-.badge-arabic{ background:var(--red); color:#fff; }
+.card-body{ display:flex; flex-direction:column; flex:1; padding:1.15rem 1.25rem 1.3rem; }
+.card-top{ display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.55rem; }
 
-/* LIMITED rubber stamp */
-.stamp{
-  position:absolute; top:.7rem; right:.7rem; z-index:3;
-  font-family:var(--f-display); font-size:1rem; letter-spacing:.18em; color:var(--red);
-  border:2px solid var(--red); padding:.18rem .5rem; transform:rotate(9deg);
-  opacity:.85; background:rgba(10,10,10,.4); text-transform:uppercase;
-  box-shadow:0 0 0 1px rgba(230,57,70,.25) inset;
-}
-
-.card-brand{ font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-.card-name{ font-family:var(--f-display); font-size:1.85rem; letter-spacing:.04em; line-height:.98; margin:.2rem 0 .55rem; transition:color .25s; }
-.card:hover .card-name{ color:var(--gold); }
-.card-foot{ margin-top:auto; }
-.card-price{ font-family:var(--f-display); font-size:1.75rem; letter-spacing:.06em; color:var(--gold); }
-.card-soldout{ font-family:var(--f-display); font-size:1.2rem; letter-spacing:.14em; color:var(--red); }
-.card-actions{ display:grid; grid-template-columns:1fr auto; gap:.55rem; margin-top:.9rem; }
+/* simple white-outline category pill (Bebas) */
+.badge{ font-family:var(--f-display); font-size:.92rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--white); border:1px solid var(--border); padding:.12rem .58rem; line-height:1.3; white-space:nowrap; }
+.card-brand{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+.card-name{ font-family:var(--f-display); font-size:1.95rem; letter-spacing:.03em; line-height:1; color:var(--white); margin-bottom:1rem; }
+.card-foot{ margin-top:auto; display:flex; align-items:baseline; justify-content:space-between; gap:.8rem; }
+.card-price{ font-family:var(--f-body); font-weight:500; font-size:1.05rem; letter-spacing:.02em; color:var(--white); }
+.card-soldout{ font-family:var(--f-body); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+.card-actions{ display:grid; grid-template-columns:1fr auto; gap:.5rem; margin-top:.95rem; }
 .card-add{
-  font-family:var(--f-display); font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase;
-  background:var(--gold); color:#000; padding:.7rem 1rem; transition:.25s var(--ease); display:flex; align-items:center; justify-content:center; gap:.45rem;
+  font-family:var(--f-display); font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase;
+  background:transparent; color:var(--white); border:1px solid var(--white); padding:.62rem 1rem;
+  transition:.35s var(--ease); display:flex; align-items:center; justify-content:center; gap:.5rem;
 }
-.card-add:hover{ background:#ffd633; box-shadow:0 8px 22px -8px var(--gold-glow); }
-.card-add[disabled]{ background:#2a2a2a; color:#666; cursor:not-allowed; box-shadow:none; }
+.card-add:hover{ background:var(--white); color:#000; }
+.card-add[disabled]{ background:transparent; border-color:var(--border); color:#555; cursor:not-allowed; }
 .card-view{
-  font-family:var(--f-display); font-size:1.12rem; letter-spacing:.1em; text-transform:uppercase;
-  border:1px solid var(--border); color:var(--text); padding:.7rem 1rem; transition:.25s var(--ease);
+  font-family:var(--f-display); font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase;
+  border:1px solid var(--border); color:var(--muted); padding:.62rem 1rem; transition:.35s var(--ease);
 }
-.card-view:hover{ border-color:var(--gold); color:var(--gold); }
+.card-view:hover{ border-color:var(--white); color:var(--white); }
 
 /* Skeleton loading */
-.skeleton{ background:var(--surface); border:1px solid var(--border); padding:1.1rem; }
+.skeleton{ background:var(--surface); border:1px solid var(--border); overflow:hidden; }
 .sk{ background:linear-gradient(90deg,#141414 25%,#1d1d1d 37%,#141414 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; }
-.sk-media{ aspect-ratio:1/1.05; margin-bottom:1rem; }
-.sk-line{ height:14px; margin-bottom:.6rem; }
+.sk-media{ aspect-ratio:1/1.05; }
+.sk-pad{ padding:1.15rem 1.25rem 1.3rem; }
+.sk-line{ height:14px; margin-bottom:.7rem; }
 .sk-line.w60{ width:60%; } .sk-line.w40{ width:40%; } .sk-line.w80{ width:80%; }
 @keyframes sk{ 0%{ background-position:100% 0; } 100%{ background-position:-100% 0; } }
 
 .empty-state{ text-align:center; padding:4rem 1rem; color:var(--muted); }
-.empty-state .marker{ color:var(--gold); font-size:1.4rem; }
+.empty-state .marker{ color:var(--white); font-size:1.4rem; }
 
 /* ====================================================================
    PRODUCT MODAL
 ==================================================================== */
 .modal-overlay{
-  position:fixed; inset:0; z-index:800; background:rgba(4,4,4,.86); backdrop-filter:blur(3px);
+  position:fixed; inset:0; z-index:800; background:rgba(0,0,0,.9); backdrop-filter:blur(4px);
   display:flex; align-items:center; justify-content:center; padding:clamp(0px,3vw,2rem);
   opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s ease;
 }
 .modal-overlay.open{ opacity:1; visibility:visible; }
 .modal{
-  position:relative; background:var(--surface); border:1px solid var(--gold-soft);
-  width:min(1040px,100%); max-height:94svh; overflow-y:auto; overflow-x:hidden;
+  position:relative; background:var(--surface); border:1px solid var(--border);
+  width:min(1060px,100%); max-height:94svh; overflow-y:auto; overflow-x:hidden;
   display:grid; grid-template-columns:1fr 1.15fr;
 }
-.modal-close{ position:absolute; top:.8rem; right:.8rem; z-index:5; width:44px; height:44px; display:grid; place-items:center; background:rgba(10,10,10,.6); border:1px solid var(--border); transition:.25s; }
-.modal-close:hover{ border-color:var(--red); color:var(--red); }
+.modal-close{ position:absolute; top:.8rem; right:.8rem; z-index:5; width:44px; height:44px; display:grid; place-items:center; background:rgba(10,10,10,.55); border:1px solid var(--border); transition:.3s var(--ease); }
+.modal-close:hover{ border-color:var(--white); color:var(--white); }
 .modal-close svg{ width:22px; height:22px; }
 
-.modal-media{ position:relative; background:#0c0c0c; border-right:1px solid var(--border); display:flex; align-items:center; justify-content:center; padding:2rem; min-height:320px; }
-.modal-media img{ width:100%; max-width:360px; height:auto; object-fit:contain; }
-.modal-media .badge-cat{ top:1rem; left:1rem; }
-.modal-media .stamp{ top:auto; bottom:1rem; left:1rem; right:auto; font-size:1.2rem; }
+.modal-media{ position:relative; background:var(--tile); border-right:1px solid var(--border); display:flex; align-items:center; justify-content:center; padding:2.4rem; min-height:340px; }
+.modal-media img{ width:100%; max-width:380px; height:auto; object-fit:contain; mix-blend-mode:multiply; }
 
-.modal-info{ padding:clamp(1.4rem,3vw,2.4rem); }
-.modal-brand{ font-size:.85rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
-.modal-name{ font-family:var(--f-display); font-size:clamp(2.4rem,5vw,3.4rem); letter-spacing:.03em; line-height:.92; margin:.2rem 0 .5rem; }
-.modal-family{ display:inline-block; font-family:var(--f-accent); font-size:.85rem; color:var(--gold); border:1px solid var(--gold-soft); padding:.25rem .7rem; transform:rotate(-1deg); margin-bottom:1rem; }
-.modal-price{ font-family:var(--f-display); font-size:2.4rem; letter-spacing:.05em; color:var(--gold); margin-bottom:1rem; }
-.modal-desc{ color:#cfcfcf; margin-bottom:1.6rem; }
+.modal-info{ padding:clamp(1.5rem,3vw,2.6rem); }
+.modal-brand{ font-size:.8rem; letter-spacing:.24em; text-transform:uppercase; color:var(--muted); }
+.modal-name{ font-family:var(--f-display); font-size:clamp(2.4rem,5vw,3.6rem); letter-spacing:.03em; line-height:.92; color:var(--white); margin:.25rem 0 .6rem; }
+.modal-tagrow{ display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin-bottom:1.1rem; }
+.modal-family{ font-family:var(--f-body); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); border:1px solid var(--border); padding:.22rem .6rem; }
+.modal-price{ font-family:var(--f-display); font-size:2.5rem; letter-spacing:.04em; color:var(--white); margin-bottom:1rem; }
+.modal-desc{ color:#c8c8c8; margin-bottom:1.7rem; }
 
-.block-label{ font-family:var(--f-display); font-size:1.15rem; letter-spacing:.16em; color:var(--muted); text-transform:uppercase; margin-bottom:.7rem; display:flex; align-items:center; gap:.6rem; }
-.block-label::before{ content:""; width:14px; height:2px; background:var(--gold); }
-.modal-block{ margin-bottom:1.5rem; }
+.block-label{ font-family:var(--f-display); font-size:1.12rem; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; margin-bottom:.7rem; display:flex; align-items:center; gap:.6rem; }
+.block-label::before{ content:""; width:16px; height:1px; background:var(--white); }
+.modal-block{ margin-bottom:1.6rem; }
 
 /* Olfactory pyramid */
-.pyramid{ display:grid; grid-template-columns:auto 1fr; gap:1.1rem; align-items:stretch; }
+.pyramid{ display:grid; grid-template-columns:auto 1fr; gap:1.2rem; align-items:stretch; }
 .pyramid-tri{ position:relative; width:74px; }
 .pyramid-tri i{ position:absolute; left:50%; transform:translateX(-50%); display:block; }
-.pyramid-tri .t1{ top:2px; width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-bottom:26px solid var(--gold); }
-.pyramid-tri .t2{ top:30px; width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-bottom:26px solid rgba(245,197,24,.55); }
-.pyramid-tri .t3{ top:58px; width:0; height:0; border-left:37px solid transparent; border-right:37px solid transparent; border-bottom:26px solid rgba(245,197,24,.28); }
+.pyramid-tri .t1{ top:2px; width:0; height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-bottom:26px solid var(--white); }
+.pyramid-tri .t2{ top:30px; width:0; height:0; border-left:26px solid transparent; border-right:26px solid transparent; border-bottom:26px solid rgba(255,255,255,.55); }
+.pyramid-tri .t3{ top:58px; width:0; height:0; border-left:37px solid transparent; border-right:37px solid transparent; border-bottom:26px solid rgba(255,255,255,.28); }
 .tier{ margin-bottom:.85rem; }
 .tier:last-child{ margin-bottom:0; }
-.tier h5{ font-family:var(--f-display); font-size:1.02rem; letter-spacing:.14em; color:var(--text); margin-bottom:.45rem; }
+.tier h5{ font-family:var(--f-display); font-size:1.02rem; letter-spacing:.16em; color:var(--text); margin-bottom:.45rem; }
 .tier h5 span{ color:var(--muted); font-size:.85rem; }
 .tags{ display:flex; flex-wrap:wrap; gap:.4rem; }
-.tag{ font-family:var(--f-accent); font-size:.78rem; padding:.25rem .6rem; transform:rotate(-1.2deg); line-height:1.3; border:1px solid var(--border); }
-.tag.top{ color:var(--gold); border-color:var(--gold-soft); }
-.tag.heart{ color:#ff8fa0; border-color:rgba(230,57,70,.4); }
-.tag.base{ color:#cdbb8a; border-color:rgba(245,197,24,.25); }
+/* note pills keep the street feel — Permanent Marker, white, no fill */
+.tag{ font-family:var(--f-accent); font-size:.78rem; color:var(--white); padding:.25rem .65rem; transform:rotate(-1deg); line-height:1.3; border:1px solid rgba(255,255,255,.35); }
+.tag.top,.tag.heart,.tag.base{ color:var(--white); border-color:rgba(255,255,255,.35); }
 
 /* Intensity meter */
-.meter{ height:12px; background:#0c0c0c; border:1px solid var(--border); position:relative; overflow:hidden; }
-.meter-fill{ height:100%; background:linear-gradient(90deg,#a87f0d,var(--gold)); box-shadow:0 0 16px var(--gold-glow); width:0; transition:width .8s var(--ease); }
-.meter-labels{ display:flex; justify-content:space-between; margin-top:.4rem; font-family:var(--f-display); letter-spacing:.12em; font-size:.92rem; color:var(--muted); }
-.meter-labels b{ color:var(--red); }
+.meter{ height:10px; background:#0c0c0c; border:1px solid var(--border); position:relative; overflow:hidden; }
+.meter-fill{ height:100%; background:linear-gradient(90deg,#4a4a4a,var(--white)); width:0; transition:width .8s var(--ease); }
+.meter-labels{ display:flex; justify-content:space-between; margin-top:.45rem; font-family:var(--f-display); letter-spacing:.14em; font-size:.92rem; color:var(--muted); }
+.meter-labels b{ color:var(--white); font-weight:400; }
 
 /* Dot ratings */
 .rating-row{ display:flex; gap:2.5rem; flex-wrap:wrap; }
 .rating .block-label{ margin-bottom:.45rem; }
-.dots{ display:flex; gap:.35rem; }
-.dot{ width:14px; height:14px; border-radius:50%; border:1px solid var(--gold-soft); background:transparent; }
-.dot.on{ background:var(--gold); box-shadow:0 0 8px var(--gold-glow); border-color:var(--gold); }
+.dots{ display:flex; gap:.38rem; }
+.dot{ width:13px; height:13px; border-radius:50%; border:1px solid rgba(255,255,255,.4); background:transparent; }
+.dot.on{ background:var(--white); border-color:var(--white); }
 
 /* Occasion / season square badges */
-.chip{ font-family:var(--f-display); font-size:1rem; letter-spacing:.12em; padding:.4rem .8rem; border:1px solid var(--border); color:var(--text); text-transform:uppercase; }
-.chip.on{ border-color:var(--gold); color:var(--gold); }
-.chip.season{ border-color:rgba(230,57,70,.4); color:#ffb3bb; }
+.chip{ font-family:var(--f-display); font-size:1rem; letter-spacing:.14em; padding:.4rem .85rem; border:1px solid var(--border); color:var(--muted); text-transform:uppercase; }
+.chip.on{ border-color:var(--white); color:var(--white); }
+.chip.season.on{ border-color:rgba(255,255,255,.5); color:var(--white); }
 
 /* Volume + qty + actions */
 .opt-row{ display:flex; gap:.6rem; flex-wrap:wrap; }
-.vol{ font-family:var(--f-display); font-size:1.2rem; letter-spacing:.08em; padding:.55rem 1.1rem; border:1px solid var(--border); transition:.2s; }
-.vol.active{ border-color:var(--gold); background:var(--gold); color:#000; }
+.vol{ font-family:var(--f-display); font-size:1.2rem; letter-spacing:.08em; padding:.55rem 1.1rem; border:1px solid var(--border); color:var(--text); transition:.3s var(--ease); }
+.vol:hover{ border-color:var(--line); }
+.vol.active{ border-color:var(--white); background:var(--white); color:#000; }
 .qty{ display:inline-flex; align-items:center; border:1px solid var(--border); }
-.qty button{ width:42px; height:42px; display:grid; place-items:center; transition:.2s; }
-.qty button:hover{ background:var(--gold); color:#000; }
+.qty button{ width:42px; height:42px; display:grid; place-items:center; transition:.25s var(--ease); }
+.qty button:hover{ background:var(--white); color:#000; }
 .qty span{ min-width:46px; text-align:center; font-family:var(--f-display); font-size:1.4rem; }
-.modal-actions{ display:grid; gap:.7rem; margin-top:1.4rem; }
+.modal-actions{ display:grid; gap:.7rem; margin-top:1.5rem; }
 
 /* ====================================================================
    CART DRAWER
@@ -476,34 +388,34 @@ ul{ list-style:none; }
 .drawer-overlay.open{ opacity:1; visibility:visible; }
 .drawer{
   position:fixed; top:0; right:0; height:100svh; width:min(430px,100%); z-index:860;
-  background:#0c0c0c; border-left:1px solid var(--gold-soft); transform:translateX(100%);
+  background:#0c0c0c; border-left:1px solid var(--border); transform:translateX(100%);
   display:flex; flex-direction:column; will-change:transform;
 }
 .drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:1.3rem 1.4rem; border-bottom:1px solid var(--border); }
-.drawer-head h3{ font-family:var(--f-display); font-size:1.9rem; letter-spacing:.1em; }
-.drawer-head h3 .gold{ font-size:1.4rem; }
-.drawer-close{ width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--border); transition:.2s; }
-.drawer-close:hover{ border-color:var(--red); color:var(--red); }
+.drawer-head h3{ font-family:var(--f-display); font-size:1.9rem; letter-spacing:.12em; }
+.drawer-head h3 .gold{ font-size:1.4rem; color:var(--muted); }
+.drawer-close{ width:42px; height:42px; display:grid; place-items:center; border:1px solid var(--border); transition:.3s var(--ease); }
+.drawer-close:hover{ border-color:var(--white); color:var(--white); }
 .drawer-close svg{ width:20px; height:20px; }
 .drawer-body{ flex:1; overflow-y:auto; padding:1rem 1.4rem; }
 .cart-item{ display:grid; grid-template-columns:64px 1fr auto; gap:.9rem; padding:1rem 0; border-bottom:1px solid var(--border); }
-.cart-item-img{ width:64px; height:64px; background:#0c0c0c; border:1px solid var(--border); object-fit:contain; padding:4px; }
+.cart-item-img{ width:64px; height:64px; background:var(--tile); border:1px solid var(--border); object-fit:contain; padding:5px; mix-blend-mode:normal; }
 .cart-item-name{ font-family:var(--f-display); font-size:1.3rem; letter-spacing:.04em; line-height:1; }
 .cart-item-meta{ color:var(--muted); font-size:.82rem; letter-spacing:.05em; margin:.2rem 0 .5rem; }
-.cart-item-price{ color:var(--gold); font-family:var(--f-display); font-size:1.25rem; }
-.cart-qty{ display:inline-flex; align-items:center; border:1px solid var(--border); margin-top:.4rem; }
-.cart-qty button{ width:28px; height:28px; display:grid; place-items:center; transition:.2s; }
-.cart-qty button:hover{ background:var(--gold); color:#000; }
+.cart-item-price{ color:var(--white); font-family:var(--f-body); font-weight:500; font-size:1rem; }
+.cart-qty{ display:inline-flex; align-items:center; border:1px solid var(--border); margin-top:.5rem; }
+.cart-qty button{ width:28px; height:28px; display:grid; place-items:center; transition:.25s var(--ease); }
+.cart-qty button:hover{ background:var(--white); color:#000; }
 .cart-qty span{ min-width:30px; text-align:center; font-family:var(--f-display); }
-.cart-remove{ color:var(--muted); align-self:start; transition:.2s; width:28px; height:28px; display:grid; place-items:center; }
-.cart-remove:hover{ color:var(--red); }
+.cart-remove{ color:var(--muted); align-self:start; transition:.25s; width:28px; height:28px; display:grid; place-items:center; }
+.cart-remove:hover{ color:var(--white); }
 .cart-remove svg{ width:18px; height:18px; }
 .drawer-empty{ text-align:center; color:var(--muted); padding:4rem 1rem; }
-.drawer-empty .marker{ color:var(--gold); font-size:1.3rem; display:block; margin-top:.5rem; }
+.drawer-empty .marker{ color:var(--white); font-size:1.3rem; display:block; margin-top:.5rem; }
 .drawer-foot{ padding:1.3rem 1.4rem; border-top:1px solid var(--border); background:#0a0a0a; }
 .subtotal{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:1rem; }
-.subtotal .lbl{ font-family:var(--f-display); font-size:1.3rem; letter-spacing:.14em; color:var(--muted); }
-.subtotal .val{ font-family:var(--f-display); font-size:2.2rem; letter-spacing:.04em; color:var(--gold); }
+.subtotal .lbl{ font-family:var(--f-display); font-size:1.3rem; letter-spacing:.16em; color:var(--muted); }
+.subtotal .val{ font-family:var(--f-display); font-size:2.2rem; letter-spacing:.04em; color:var(--white); }
 
 /* ====================================================================
    SPECIAL ORDERS (ENCARGOS)
@@ -513,18 +425,19 @@ ul{ list-style:none; }
 .encargos-copy h2{ font-family:var(--f-display); font-size:clamp(2.6rem,7vw,5rem); letter-spacing:.03em; line-height:.9; }
 .encargos-copy h2 .red{ display:block; }
 .encargos-copy p{ color:var(--muted); margin-top:1.2rem; max-width:42ch; }
-.encargos-copy .connect{ margin-top:1.6rem; font-family:var(--f-accent); color:var(--gold); transform:rotate(-1.5deg); display:inline-block; }
-.form{ background:var(--surface); border:1px solid var(--border); padding:clamp(1.4rem,3vw,2.2rem); position:relative; }
-.form::before{ content:"["; position:absolute; top:.4rem; left:.6rem; font-family:var(--f-display); color:var(--gold); font-size:2rem; opacity:.7; }
-.form::after{ content:"]"; position:absolute; bottom:.1rem; right:.7rem; font-family:var(--f-display); color:var(--gold); font-size:2rem; opacity:.7; }
+.encargos-copy .connect{ margin-top:1.6rem; font-family:var(--f-body); font-size:.85rem; letter-spacing:.06em; color:var(--muted); display:inline-block; }
+.form{ background:var(--surface); border:1px solid var(--border); padding:clamp(1.6rem,3vw,2.4rem); position:relative; }
 .field{ margin-bottom:1.1rem; }
-.field label{ display:block; font-family:var(--f-display); font-size:1.05rem; letter-spacing:.12em; color:var(--muted); margin-bottom:.4rem; text-transform:uppercase; }
+.field label{ display:block; font-family:var(--f-display); font-size:1.05rem; letter-spacing:.16em; color:var(--muted); margin-bottom:.45rem; text-transform:uppercase; }
 .field input,.field textarea,.field select{
   width:100%; background:#0b0b0b; border:1px solid var(--border); color:var(--text);
-  padding:.8rem .9rem; transition:.2s; border-radius:0;
+  padding:.8rem .9rem; transition:.25s var(--ease); border-radius:0;
 }
-.field input:focus,.field textarea:focus,.field select:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft); }
+.field input:focus,.field textarea:focus,.field select:focus{ outline:none; border-color:var(--white); box-shadow:0 0 0 1px rgba(255,255,255,.3); }
 .field textarea{ resize:vertical; min-height:90px; }
+
+/* logos sit seamlessly on black via screen blend */
+.nav-logo img,.hero-logo,.mnav-top img,.footer-logo img,.admin-side img,.admin-login img{ mix-blend-mode:screen; }
 
 /* ====================================================================
    FOOTER
@@ -535,23 +448,25 @@ ul{ list-style:none; }
 .footer-tag{ color:var(--muted); font-style:italic; margin-top:.7rem; max-width:30ch; }
 .footer-soc{ display:flex; gap:.7rem; margin-top:1.1rem; }
 .footer-soc a{ width:44px; height:44px; display:grid; place-items:center; border:1px solid var(--border); transition:.25s; }
-.footer-soc a:hover{ border-color:var(--gold); color:var(--gold); transform:translateY(-3px); }
+.footer-soc a:hover{ border-color:var(--white); color:var(--white); transform:translateY(-3px); }
 .footer-soc svg{ width:22px; height:22px; }
-.footer-col h4{ font-family:var(--f-display); font-size:1.3rem; letter-spacing:.14em; color:var(--text); margin-bottom:.9rem; }
-.footer-col a{ display:block; color:var(--muted); padding:.25rem 0; transition:.2s; }
-.footer-col a:hover{ color:var(--gold); }
+.footer-col h4{ font-family:var(--f-display); font-size:1.3rem; letter-spacing:.16em; color:var(--text); margin-bottom:.9rem; }
+.footer-col a{ display:block; color:var(--muted); padding:.25rem 0; transition:.25s var(--ease); }
+.footer-col a:hover{ color:var(--white); }
 .footer-bottom{ margin-top:2.6rem; padding-top:1.4rem; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center; color:var(--muted); font-size:.88rem; letter-spacing:.04em; }
-.footer-bottom .marker{ color:var(--gold); }
+.footer-bottom .marker{ color:var(--white); }
 
 /* ====================================================================
    FLOATING WHATSAPP + BACK TO TOP
 ==================================================================== */
-.fab-wa{ position:fixed; right:20px; bottom:20px; z-index:500; width:58px; height:58px; border-radius:50%; background:#25D366; display:grid; place-items:center; box-shadow:0 8px 24px -6px rgba(37,211,102,.5); animation:wapulse 2.2s infinite; }
-.fab-wa svg{ width:30px; height:30px; color:#fff; }
-@keyframes wapulse{ 0%{ box-shadow:0 0 0 0 rgba(230,57,70,.55), 0 8px 24px -6px rgba(37,211,102,.5);} 70%{ box-shadow:0 0 0 16px rgba(230,57,70,0), 0 8px 24px -6px rgba(37,211,102,.5);} 100%{ box-shadow:0 0 0 0 rgba(230,57,70,0), 0 8px 24px -6px rgba(37,211,102,.5);} }
-.fab-top{ position:fixed; right:24px; bottom:90px; z-index:500; width:48px; height:48px; background:var(--surface); border:1px solid var(--gold-soft); display:grid; place-items:center; color:var(--gold); opacity:0; visibility:hidden; transform:translateY(12px); transition:.3s var(--ease); }
+.fab-wa{ position:fixed; right:20px; bottom:20px; z-index:500; width:56px; height:56px; border-radius:50%; background:#0a0a0a; border:1px solid var(--white); display:grid; place-items:center; animation:wapulse 2.6s infinite; transition:background .3s, color .3s; }
+.fab-wa svg{ width:28px; height:28px; color:var(--white); }
+.fab-wa:hover{ background:var(--white); }
+.fab-wa:hover svg{ color:#000; }
+@keyframes wapulse{ 0%{ box-shadow:0 0 0 0 rgba(255,255,255,.32);} 70%{ box-shadow:0 0 0 14px rgba(255,255,255,0);} 100%{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+.fab-top{ position:fixed; right:25px; bottom:90px; z-index:500; width:46px; height:46px; background:var(--surface); border:1px solid var(--border); display:grid; place-items:center; color:var(--white); opacity:0; visibility:hidden; transform:translateY(12px); transition:.35s var(--ease); }
 .fab-top.show{ opacity:1; visibility:visible; transform:translateY(0); }
-.fab-top:hover{ background:var(--gold); color:#000; }
+.fab-top:hover{ background:var(--white); color:#000; }
 .fab-top svg{ width:22px; height:22px; }
 
 /* ====================================================================
@@ -590,8 +505,8 @@ ul{ list-style:none; }
 .admin-table tr:hover td{ background:#0e0e0e; }
 .admin-table .ttl{ font-family:var(--f-display); font-size:1.2rem; letter-spacing:.03em; }
 .pill-stock{ font-family:var(--f-body); font-size:.72rem; letter-spacing:.05em; padding:.18rem .5rem; border-radius:999px; }
-.pill-stock.in{ background:rgba(245,197,24,.15); color:var(--gold); }
-.pill-stock.out{ background:rgba(230,57,70,.15); color:var(--red); }
+.pill-stock.in{ background:rgba(255,255,255,.14); color:var(--white); }
+.pill-stock.out{ background:rgba(255,255,255,.06); color:var(--muted); }
 .icon-btn{ width:34px; height:34px; display:inline-grid; place-items:center; border:1px solid var(--border); transition:.2s; margin-left:.3rem; }
 .icon-btn:hover{ border-color:var(--gold); color:var(--gold); }
 .icon-btn.del:hover{ border-color:var(--red); color:var(--red); }
@@ -606,7 +521,7 @@ ul{ list-style:none; }
 .switch .track::after{ content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#666; border-radius:50%; transition:.2s; }
 .switch input:checked + .track{ background:var(--gold); }
 .switch input:checked + .track::after{ left:25px; background:#000; }
-.admin-img-prev{ width:90px; height:90px; object-fit:contain; border:1px solid var(--border); background:#0c0c0c; padding:4px; margin-top:.5rem; }
+.admin-img-prev{ width:90px; height:90px; object-fit:contain; border:1px solid var(--border); background:var(--tile); padding:4px; margin-top:.5rem; }
 .hint{ color:var(--muted); font-size:.8rem; margin-top:.3rem; }
 
 /* ====================================================================
@@ -642,10 +557,7 @@ ul{ list-style:none; }
 }
 </style>
 </head>
-<body class="brick">
-
-<!-- film grain across everything -->
-<div class="grain" aria-hidden="true"></div>
+<body>
 
 <!-- ================= NAVIGATION ================= -->
 <header class="nav">
@@ -700,52 +612,27 @@ ul{ list-style:none; }
 
 <!-- ================= HERO ================= -->
 <section class="hero">
-  <div class="hero-overlay"></div>
-
-  <!-- floating gold chains -->
-  <svg class="chain" viewBox="0 0 120 320" fill="none" aria-hidden="true">
-    <g stroke="#f5c518" stroke-width="6">
-      <ellipse cx="60" cy="34" rx="20" ry="28"/><ellipse cx="60" cy="84" rx="20" ry="28"/>
-      <ellipse cx="60" cy="134" rx="20" ry="28"/><ellipse cx="60" cy="184" rx="20" ry="28"/>
-      <ellipse cx="60" cy="234" rx="20" ry="28"/>
-    </g>
-    <circle cx="60" cy="292" r="20" fill="#f5c518"/>
-  </svg>
-  <svg class="chain two" viewBox="0 0 120 320" fill="none" aria-hidden="true">
-    <g stroke="#f5c518" stroke-width="6">
-      <ellipse cx="60" cy="34" rx="20" ry="28"/><ellipse cx="60" cy="84" rx="20" ry="28"/>
-      <ellipse cx="60" cy="134" rx="20" ry="28"/><ellipse cx="60" cy="184" rx="20" ry="28"/>
-    </g>
-    <circle cx="60" cy="240" r="20" fill="#f5c518"/>
-  </svg>
-
-  <div class="container hero-inner">
-    <span class="hero-eyebrow" data-i18n="hero_eyebrow">DESIGNER · NICHE · ARABIC</span>
-    <h1>
-      <span class="hero-line l1">THE DRIP</span>
-      <span class="hero-line l2">IS REAL</span>
-    </h1>
-    <!-- tagline stays English in BOTH languages, always -->
-    <p class="hero-tag">Your scent. Your street. Your story.</p>
-    <div class="hero-cta">
-      <a href="#catalogo" class="btn btn-gold" data-i18n="hero_cta">Shop the Collection</a>
-      <a href="#encargos" class="btn btn-ghost" data-i18n="hero_cta2">Special Orders</a>
-    </div>
+  <!-- the logo IS the statement -->
+  <img class="hero-logo" src="./assets/dripx-logo.png" alt="DripX" onerror="this.style.display='none'" />
+  <h1>
+    <span class="hero-line l1">THE STREETS</span>
+    <span class="hero-line l2">REMEMBER YOUR SCENT</span>
+  </h1>
+  <!-- tagline stays English in BOTH languages, always -->
+  <p class="hero-tag">Your scent. Your street. Your story.</p>
+  <div class="hero-cta">
+    <a href="#catalogo" class="btn btn-gold" data-i18n="hero_cta">Shop the Collection</a>
+    <a href="#encargos" class="btn btn-ghost" data-i18n="hero_cta2">Special Orders</a>
   </div>
 
-  <div class="hero-scroll" aria-hidden="true">
+  <a href="#catalogo" class="hero-scroll" aria-label="Scroll to catalog">
     <span data-i18n="scroll">SCROLL</span>
-    <div class="line"></div>
-  </div>
+    <span class="arrow"></span>
+  </a>
 </section>
 
-<!-- ================= MARQUEE ================= -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track" id="marqueeTrack"></div>
-</div>
-
 <!-- ================= CATALOG ================= -->
-<section class="section angle" id="catalogo">
+<section class="section" id="catalogo">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow" data-i18n="cat_eyebrow">The Collection</span>
@@ -764,8 +651,6 @@ ul{ list-style:none; }
     <div class="grid" id="grid"></div>
   </div>
 </section>
-
-<div class="spray-divider" aria-hidden="true"></div>
 
 <!-- ================= SPECIAL ORDERS ================= -->
 <section class="section encargos" id="encargos">
@@ -900,10 +785,10 @@ const SUPABASE_ANON_KEY = "REPLACE_WITH_DRIPX_ANON_KEY";
 const SB_TABLE = "perfumes";
 
 const ADMIN_PASSWORD = "dripx2024";
-// ⚠️ ANDREW: replace with the real WhatsApp number (digits only, country code first).
-const DEFAULT_WHATSAPP = "50600000000";
+// WhatsApp (digits only, country code first).
+const DEFAULT_WHATSAPP = "50685438447";
 
-const LS = { cart:"dripx_cart", lang:"dripx_lang", prod:"dripx_products", wa:"dripx_whatsapp" };
+const LS = { cart:"dripx_cart", lang:"dripx_lang", prod:"dripx_products_v2", wa:"dripx_whatsapp" };
 
 let supabaseClient = null;
 try { if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
@@ -1020,121 +905,121 @@ const SEED = [
     description_es:"Esto no es la colonia de tu tío. Sauvage Elixir pega distinto — especiado, magnético, del tipo que voltea cabezas antes de que cruces la puerta.",
     description_en:"This ain't your uncle's cologne. Sauvage Elixir hits different — spicy, magnetic, the kind of scent that turns heads before you even hit the door.",
     top_notes:["Cinnamon","Nutmeg","Cardamom","Grapefruit"], heart_notes:["Lavender"], base_notes:["Licorice","Sandalwood","Amber","Patchouli"],
-    family:"Spicy Amber", intensity:5, longevity:5, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Spicy Amber", intensity:5, longevity:5, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Futura-2024-10-04T164213.957.png?v=1742484955", in_stock:true },
   { id:"d02", name:"Bleu de Chanel EDP", brand:"Chanel", category:"designer", price_crc:90000, limited:false,
     description_es:"Dinero limpio en frasco. Bleu se mueve suave — cítricos arriba, cedro ahumado abajo. De la oficina a la calle, nunca falla.",
     description_en:"Clean money in a bottle. Bleu moves smooth — citrus up top, smoky cedar underneath. Boardroom to backstreet, it never misses.",
     top_notes:["Grapefruit","Lemon","Mint","Pink Pepper"], heart_notes:["Ginger","Nutmeg","Jasmine"], base_notes:["Incense","Vetiver","Cedar","Sandalwood"],
-    family:"Woody Aromatic", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","DATE","FORMAL"], seasons:["SPRING","FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Aromatic", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","DATE","FORMAL"], seasons:["SPRING","FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitled_design_-_2026-06-04T001234.999.jpg?v=1780510424", in_stock:true },
   { id:"d03", name:"Black Orchid", brand:"Tom Ford", category:"designer", price_crc:110000, limited:true,
     description_es:"Oscuro, denso, intocable. Black Orchid es medianoche en un frasco — trufa, especias y chocolate para noches que no piden permiso.",
     description_en:"Dark, rich, untouchable. Black Orchid is midnight in a flacon — truffle, spice and chocolate for nights that don't ask permission.",
     top_notes:["Black Truffle","Ylang-Ylang","Bergamot","Blackcurrant"], heart_notes:["Orchid","Spice","Lotus Wood"], base_notes:["Patchouli","Vanilla","Incense","Dark Chocolate"],
-    family:"Oriental Floral", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Oriental Floral", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/BLACK_ORCHID_TOM_FORD.png?v=1744646418", in_stock:true },
   { id:"d04", name:"La Nuit de L'Homme", brand:"Yves Saint Laurent", category:"designer", price_crc:75000, limited:false,
     description_es:"Tenue y letal. Cardamomo y lavanda envueltos en humo — el aroma de cierre cuando la noche apenas empieza y tú también.",
     description_en:"Lowlit and lethal. Cardamom and lavender wrapped in smoke — the closer scent when the night's still young and so are you.",
     top_notes:["Cardamom"], heart_notes:["Lavender","Cedar","Bergamot"], base_notes:["Cumin","Vetiver"],
-    family:"Spicy Woody", intensity:3, longevity:3, sillage:3, occasions:["NIGHT","DATE"], seasons:["SPRING","FALL"], image_url:"", in_stock:true },
+    family:"Spicy Woody", intensity:3, longevity:3, sillage:3, occasions:["NIGHT","DATE"], seasons:["SPRING","FALL"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/YVES_SAINT_LAURENT_LA_NUIT_DE_L_HOMME_LE_PARFUM.png?v=1747798160", in_stock:true },
   { id:"d05", name:"Acqua di Giò Profumo", brand:"Giorgio Armani", category:"designer", price_crc:80000, limited:false,
     description_es:"Brisa salada con filo de etiqueta. Profumo toma la playa y la viste de incienso — fresco, pero serio y maduro.",
     description_en:"Salt air with a black-tie edge. Profumo takes the beach and dresses it in incense — fresh, but grown and serious.",
     top_notes:["Bergamot","Marine Notes"], heart_notes:["Geranium","Sage","Rosemary"], base_notes:["Incense","Patchouli"],
-    family:"Aquatic Aromatic", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","DATE"], seasons:["SPRING","SUMMER"], image_url:"", in_stock:true },
+    family:"Aquatic Aromatic", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","DATE"], seasons:["SPRING","SUMMER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/GiorgioArmaniAcquaDiGioProfumoParfum.png?v=1730257712", in_stock:true },
   { id:"d06", name:"Eros EDP", brand:"Versace", category:"designer", price_crc:70000, limited:false,
     description_es:"Ruidoso a propósito. Menta, manzana y vainilla apiladas hasta el cielo — Eros entra como dueño de la cuadra, y casi siempre lo es.",
     description_en:"Loud on purpose. Mint, apple and vanilla stacked sky-high — Eros walks in like it owns the block and usually does.",
     top_notes:["Mint","Green Apple","Lemon"], heart_notes:["Tonka Bean","Geranium","Ambroxan"], base_notes:["Vanilla","Vetiver","Cedar","Oakmoss"],
-    family:"Aromatic Fougère", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Aromatic Fougère", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/SENTSANGEL-2026-05-02T002344.742.jpg?v=1777660249", in_stock:true },
   { id:"d07", name:"Luna Rossa Ocean", brand:"Prada", category:"designer", price_crc:78000, limited:false,
     description_es:"Nítido, filoso, sin esfuerzo. Ocean es esa frescura impecable con espina amaderada — drip de día que nunca se esfuerza de más.",
     description_en:"Crisp, sharp, effortless. Ocean is that clean-cut freshness with a woody backbone — daytime drip that never tries too hard.",
     top_notes:["Bergamot","Bitter Orange"], heart_notes:["Ambrette","Sage"], base_notes:["Patchouli","Woods"],
-    family:"Woody Aromatic", intensity:3, longevity:4, sillage:3, occasions:["DAY","OFFICE"], seasons:["SPRING","SUMMER"], image_url:"", in_stock:true },
+    family:"Woody Aromatic", intensity:3, longevity:4, sillage:3, occasions:["DAY","OFFICE"], seasons:["SPRING","SUMMER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/UP3614274089356_1.jpg?v=1739459465", in_stock:true },
   { id:"d08", name:"Gentleman EDP", brand:"Givenchy", category:"designer", price_crc:72000, limited:false,
     description_es:"Energía de caballero con calle. Pera e iris sobre vainilla negra y cuero — refinado, algo peligroso, puro estilo.",
     description_en:"Smooth operator energy. Pear and iris over black vanilla and leather — refined, a little dangerous, all class.",
     top_notes:["Pear","Cardamom"], heart_notes:["Iris","Lavender"], base_notes:["Black Vanilla","Patchouli","Leather"],
-    family:"Woody Floral", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","OFFICE","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Floral", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","OFFICE","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_9_31ff2586-b82d-4294-9062-0912c9e2a950.jpg?v=1774450410", in_stock:true },
   { id:"d09", name:"Uomo Intense", brand:"Valentino", category:"designer", price_crc:76000, limited:false,
     description_es:"Terciopelo y cuero, sin disculpas. Uomo Intense es iris cremoso sobre tonka — elegancia de dinero viejo con pulso de calle.",
     description_en:"Velvet and leather, no apologies. Uomo Intense is creamy iris over tonka — old-money cool with a street pulse.",
     top_notes:["Bergamot","Myrtle"], heart_notes:["Iris","Leather"], base_notes:["Vanilla","Tonka Bean","Woods"],
-    family:"Oriental Woody", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Oriental Woody", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0441/9292/3800/products/ValentinoUomoIntenseEauDePerfumeForMen-100ml_1_2048x2048_6db556fe-23ab-4ba6-926b-f1af87f9c7e6.jpg?v=1637604048", in_stock:true },
   { id:"d10", name:"Terre d'Hermès Parfum", brand:"Hermès", category:"designer", price_crc:95000, limited:true,
     description_es:"Tierra, pedernal y naranja — Terre es concreto y cítrico, mineral y carácter. Un clásico moderno que sigue dominando.",
     description_en:"Earth, flint and orange — Terre is concrete and citrus, minerals and grit. A modern classic that still bodies the competition.",
     top_notes:["Orange","Grapefruit"], heart_notes:["Pepper","Pelargonium"], base_notes:["Vetiver","Cedar","Patchouli","Benzoin","Flint"],
-    family:"Woody Chypre", intensity:4, longevity:5, sillage:4, occasions:["DAY","OFFICE","FORMAL"], seasons:["SPRING","FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Chypre", intensity:4, longevity:5, sillage:4, occasions:["DAY","OFFICE","FORMAL"], seasons:["SPRING","FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/SENTSANGEL_25_d19d42fe-7bdd-4d17-be63-b002c0c4412e.jpg?v=1776956218", in_stock:true },
 
   /* ===== NICHE (10) ===== */
   { id:"n01", name:"Replica Jazz Club", brand:"Maison Margiela", category:"niche", price_crc:120000, limited:false,
     description_es:"Sótano lleno de humo, vaso de ron, último set de la noche. Jazz Club es whiskey y tabaco embotellados — cálido, etílico, inolvidable.",
     description_en:"Smoke-filled basement, glass of rum, last set of the night. Jazz Club is whiskey and tobacco bottled — warm, boozy, unforgettable.",
     top_notes:["Pink Pepper","Neroli","Lemon"], heart_notes:["Rum","Clary Sage","Vetiver"], base_notes:["Tobacco Leaf","Vanilla","Tonka Bean","Styrax"],
-    family:"Aromatic Tobacco", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Aromatic Tobacco", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_51_5b2b101e-0f2b-48c4-bdfa-902c5ae15872.jpg?v=1780431083", in_stock:true },
   { id:"n02", name:"Gypsy Water", brand:"Byredo", category:"niche", price_crc:130000, limited:false,
     description_es:"Fogata y pino en carretera abierta. Gypsy Water es incienso suave y ámbar — lujo silencioso para los que se mueven distinto.",
     description_en:"Bonfire and pine on an open road. Gypsy Water is soft incense and amber — quiet luxury for the ones who move different.",
     top_notes:["Bergamot","Juniper","Lemon","Pepper"], heart_notes:["Incense","Pine Needles","Orris"], base_notes:["Amber","Sandalwood","Vanilla"],
-    family:"Woody Aromatic", intensity:2, longevity:3, sillage:2, occasions:["DAY","OFFICE"], seasons:["SPRING","FALL"], image_url:"", in_stock:true },
+    family:"Woody Aromatic", intensity:2, longevity:3, sillage:2, occasions:["DAY","OFFICE"], seasons:["SPRING","FALL"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_8_8d4ae867-0f9b-47d9-b0a9-83dcdf64318d.jpg?v=1748434440", in_stock:true },
   { id:"n03", name:"Santal 33", brand:"Le Labo", category:"niche", price_crc:145000, limited:false,
     description_es:"El aroma de cada cuarto cool donde has entrado. Santal 33 es sándalo cremoso y cuero — uniforme para quienes no usan uniforme.",
     description_en:"The scent of every cool room you ever walked into. Santal 33 is creamy sandalwood and leather — a uniform for people who don't wear uniforms.",
     top_notes:["Cardamom","Iris","Violet"], heart_notes:["Ambrox","Sandalwood","Papyrus"], base_notes:["Cedar","Leather","Musk"],
-    family:"Woody Aromatic", intensity:3, longevity:4, sillage:3, occasions:["DAY","NIGHT","OFFICE","DATE"], seasons:["SPRING","FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Aromatic", intensity:3, longevity:4, sillage:3, occasions:["DAY","NIGHT","OFFICE","DATE"], seasons:["SPRING","FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_46_7d5f1635-b7a8-4064-b954-b3c0a4032fc2.jpg?v=1772804133", in_stock:true },
   { id:"n04", name:"Oud for Greatness", brand:"Initio", category:"niche", price_crc:160000, limited:true,
     description_es:"Bestia en frasco. Azafrán, oud y pachulí al máximo — este te anuncia desde el otro lado de la ciudad.",
     description_en:"Beast in a bottle. Saffron, oud and patchouli cranked to the max — this one announces you from across the city.",
     top_notes:["Lavender","Nutmeg","Saffron"], heart_notes:["Oud","Patchouli"], base_notes:["Musk"],
-    family:"Woody Oud", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Oud", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_56_fdbdbffd-8ac3-4dab-8757-f7c38338d2e0.jpg?v=1775502534", in_stock:true },
   { id:"n05", name:"Layton", brand:"Parfums de Marly", category:"niche", price_crc:140000, limited:true,
     description_es:"Manzana, vainilla y especias con peso de hombre hecho. Layton es realeza que agrada a todos — dulce, filoso, imposible de ignorar.",
     description_en:"Apple, vanilla and spice with grown-man weight. Layton is crowd-pleaser royalty — sweet, sharp and impossible to ignore.",
     top_notes:["Apple","Bergamot","Lavender","Mandarin"], heart_notes:["Violet","Jasmine","Geranium","Pepper"], base_notes:["Vanilla","Sandalwood","Guaiac Wood","Cardamom"],
-    family:"Amber Spicy", intensity:4, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Amber Spicy", intensity:4, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_39_b9d340c0-e8d4-4329-acbb-a95bcdb7497f.jpg?v=1775249001", in_stock:true },
   { id:"n06", name:"Naxos", brand:"Xerjoff", category:"niche", price_crc:155000, limited:true,
     description_es:"Miel, tabaco y lavanda goteando oro. Naxos es lujo con ronquera — humo dulce que se queda como una buena historia.",
     description_en:"Honey, tobacco and lavender dripping gold. Naxos is luxury with a rasp — sweet smoke that lingers like a good story.",
     top_notes:["Bergamot","Lavender","Lemon","Aromatic Herbs"], heart_notes:["Honey","Cinnamon","Jasmine","Tobacco"], base_notes:["Tonka Bean","Vanilla","Agarwood","Musk"],
-    family:"Aromatic Fougère", intensity:4, longevity:5, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Aromatic Fougère", intensity:4, longevity:5, sillage:4, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign-2026-05-27T022927.755.jpg?v=1779827695", in_stock:true },
   { id:"n07", name:"Red Tobacco", brand:"Mancera", category:"niche", price_crc:125000, limited:true,
     description_es:"Especiero en llamas. Red Tobacco es canela, azafrán y oud sin tregua — un monstruo de clima frío que no se rinde.",
     description_en:"Spice rack set on fire. Red Tobacco is cinnamon, saffron and oud with no chill — a cold-weather monster that won't quit.",
     top_notes:["Saffron","Spices"], heart_notes:["Tobacco","Oud","Cinnamon"], base_notes:["Amber","Vanilla","Musk"],
-    family:"Spicy Woody", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","FORMAL"], seasons:["WINTER"], image_url:"", in_stock:true },
+    family:"Spicy Woody", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","FORMAL"], seasons:["WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_20_5bdd983b-0915-48cf-b96d-7a9d6ecd0ba3.jpg?v=1779135143", in_stock:true },
   { id:"n08", name:"Angels' Share", brand:"Kilian", category:"niche", price_crc:150000, limited:false,
     description_es:"Coñac, canela y praliné — postre para adultos. Angels' Share es gourmand etílico hecho con guantes blancos.",
     description_en:"Cognac, cinnamon and praline — dessert for grown folks. Angels' Share is boozy gourmand done with white gloves.",
     top_notes:["Cognac"], heart_notes:["Cinnamon","Tonka Bean","Oak"], base_notes:["Praline","Vanilla","Sandalwood"],
-    family:"Amber Gourmand", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Amber Gourmand", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_6_7eb5137a-7d7f-41fd-b27c-dcd1b4297137.jpg?v=1758143515", in_stock:true },
   { id:"n09", name:"Reflection Man", brand:"Amouage", category:"niche", price_crc:165000, limited:true,
     description_es:"Limpio, floral, elegante de otro nivel. Reflection Man es jazmín y sándalo pulidos a brillo — flex silencioso, respeto fuerte.",
     description_en:"Clean, floral, untouchably elegant. Reflection Man is jasmine and sandalwood polished to a shine — quiet flex, loud respect.",
     top_notes:["Rosemary","Bergamot","Pink Pepper"], heart_notes:["Jasmine","Neroli","Ylang-Ylang"], base_notes:["Cedar","Sandalwood","Vetiver","Patchouli"],
-    family:"Floral Woody", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","FORMAL"], seasons:["SPRING","SUMMER"], image_url:"", in_stock:true },
+    family:"Floral Woody", intensity:4, longevity:4, sillage:4, occasions:["DAY","OFFICE","FORMAL"], seasons:["SPRING","SUMMER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/sentsangle_31.jpg?v=1777994095", in_stock:true },
   { id:"n10", name:"Fleur Narcotique", brand:"Ex Nihilo", category:"niche", price_crc:135000, limited:false,
     description_es:"Durazno, peonía y almizcle — adictivo al contacto. Fleur Narcotique es el éxito de culto unisex por el que todos preguntan.",
     description_en:"Peach, peony and musk — addictive on contact. Fleur Narcotique is the unisex cult hit that everyone asks about.",
     top_notes:["Bergamot","Peach","Lychee"], heart_notes:["Peony","Orange Blossom","Jasmine"], base_notes:["Musk","Moss"],
-    family:"Fruity Floral", intensity:3, longevity:4, sillage:3, occasions:["DAY","NIGHT","DATE"], seasons:["SPRING","SUMMER"], image_url:"", in_stock:true },
+    family:"Fruity Floral", intensity:3, longevity:4, sillage:3, occasions:["DAY","NIGHT","DATE"], seasons:["SPRING","SUMMER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Sentsangel-2025-11-17T201147.634.jpg?v=1763388818", in_stock:true },
 
   /* ===== ARABIC (10) ===== */
   { id:"a01", name:"Khamrah", brand:"Lattafa", category:"arabic", price_crc:45000, limited:true,
     description_es:"Dátiles, canela y vainilla bien densos. Khamrah es realeza de mesa de postres a precio de calle — dulce, especiado y orgullosamente fuerte.",
     description_en:"Dates, cinnamon and vanilla stacked thick. Khamrah is dessert-table royalty for pennies on the dollar — sweet, spiced and proudly loud.",
     top_notes:["Cinnamon","Nutmeg","Bergamot"], heart_notes:["Dates","Praline","Tuberose","Mahonial"], base_notes:["Vanilla","Tonka Bean","Benzoin","Amber","Myrrh"],
-    family:"Amber Gourmand", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Amber Gourmand", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_89_d5ea77c0-acc2-40e1-9708-288c77759ec7.jpg?v=1772723396", in_stock:true },
   { id:"a02", name:"La Yuqawam", brand:"Rasasi", category:"arabic", price_crc:50000, limited:true,
     description_es:"Manzana, cuero y oud — construido como tanque. La Yuqawam significa 'irresistible' y no farolea. Rendimiento de días.",
     description_en:"Apple, leather and oud — built like a tank. La Yuqawam means 'irresistible' and it doesn't bluff. Performance for days.",
     top_notes:["Apple","Cinnamon","Saffron"], heart_notes:["Rose","Oud","Leather"], base_notes:["Amber","Patchouli","Sandalwood"],
-    family:"Leather", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Leather", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE","FORMAL"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/UP614514204023_1.jpg?v=1722976295", in_stock:true },
   { id:"a03", name:"Shaghaf Oud", brand:"Swiss Arabian", category:"arabic", price_crc:55000, limited:false,
     description_es:"Frambuesa y rosa sobre oud profundo — lo dulce se cruza con lo serio. Shaghaf Oud es esa riqueza que parece costar el doble.",
     description_en:"Raspberry and rose over deep oud — sweet meets serious. Shaghaf Oud is that crowd-stopping richness that feels twice its price.",
     top_notes:["Saffron","Raspberry"], heart_notes:["Rose","Oud"], base_notes:["Vanilla","Amber","Musk"],
-    family:"Woody Oud", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Woody Oud", intensity:5, longevity:5, sillage:5, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0793/9712/6445/products/SAP_SHAGAF-OUD.png?v=1689138902", in_stock:true },
   { id:"a04", name:"Dahn Al Oud", brand:"Ajmal", category:"arabic", price_crc:60000, limited:true,
     description_es:"La cosa real. Oud puro, ahumado y animálico — para quien sabe que el verdadero agarwood no susurra, habla.",
     description_en:"The real thing. Pure oud, smoky and animalic — for those who know that real agarwood doesn't whisper, it speaks.",
@@ -1144,12 +1029,12 @@ const SEED = [
     description_es:"Dulce, cálido y fácil de amar. 9PM es manzana, vainilla y madera de ámbar — el rey económico que golpea por encima de su peso.",
     description_en:"Sweet, warm and easy to love. 9PM is apple, vanilla and amberwood — the budget king that punches way above its weight.",
     top_notes:["Apple","Cinnamon","Lavender","Bergamot"], heart_notes:["Tonka Bean","Vanilla"], base_notes:["Vanilla","Amberwood"],
-    family:"Amber", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","OFFICE","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Amber", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","OFFICE","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/Untitleddesign_d16b1cf5-290f-4f54-a2e8-ef161c1adc19.jpg?v=1749473485", in_stock:true },
   { id:"a06", name:"Club de Nuit Intense Man", brand:"Armaf", category:"arabic", price_crc:48000, limited:false,
     description_es:"Piña, humo y actitud — el Aventus del pueblo. CDNIM es frutal, amaderado y confianza embotellada por una fracción del precio.",
     description_en:"Pineapple, smoke and swagger — the people's Aventus. CDNIM is fruity, woody and bottled confidence for a fraction of the price.",
     top_notes:["Lemon","Pineapple","Blackcurrant","Apple","Bergamot"], heart_notes:["Birch","Jasmine","Rose"], base_notes:["Musk","Ambergris","Vanilla","Oakmoss"],
-    family:"Fruity Woody", intensity:4, longevity:4, sillage:5, occasions:["DAY","NIGHT","OFFICE","FORMAL"], seasons:["SPRING","SUMMER","FALL"], image_url:"", in_stock:true },
+    family:"Fruity Woody", intensity:4, longevity:4, sillage:5, occasions:["DAY","NIGHT","OFFICE","FORMAL"], seasons:["SPRING","SUMMER","FALL"], image_url:"https://cdn.shopify.com/s/files/1/0455/0914/8823/files/SENTSANGEL_54_2ff5b950-3817-4e46-892a-7dcd27b989f8.jpg?v=1777386787", in_stock:true },
   { id:"a07", name:"Blue Oud", brand:"Arabian Oud", category:"arabic", price_crc:65000, limited:false,
     description_es:"Fresco arriba, oud abajo. Blue Oud une lo limpio y lo exótico — un oud diario para quien no hace lo básico.",
     description_en:"Fresh up top, oud underneath. Blue Oud bridges clean and exotic — an everyday oud for people who don't do basic.",
@@ -1159,7 +1044,7 @@ const SEED = [
     description_es:"Piña, cuero y ambroxan — energía de león, literal ('Asad' significa león). Audaz, dulce y hecho para dominar el lugar.",
     description_en:"Pineapple, leather and ambroxan — lion energy, literally ('Asad' means lion). Bold, sweet and built to dominate a room.",
     top_notes:["Pineapple","Blackcurrant","Bergamot"], heart_notes:["Violet","Oud","Leather"], base_notes:["Vanilla","Ambroxan","Musk","Agarwood"],
-    family:"Amber Woody", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"", in_stock:true },
+    family:"Amber Woody", intensity:4, longevity:4, sillage:4, occasions:["NIGHT","DATE"], seasons:["FALL","WINTER"], image_url:"https://cdn.shopify.com/s/files/1/0441/9292/3800/products/asad11_540x_65f5afe3-505c-4470-a6cc-a4a9181dc549.jpg?v=1671282188", in_stock:true },
   { id:"a09", name:"Dhanal Oudh Abiyad", brand:"Rasasi", category:"arabic", price_crc:58000, limited:false,
     description_es:"Rosa y oud, suaves como oro blanco. Abiyad es el lado refinado de la perfumería árabe — denso, equilibrado, poderoso sin gritar.",
     description_en:"Rose and oud, white-gold smooth. Abiyad is the refined side of Arabian perfumery — rich, balanced, quietly powerful.",
@@ -1180,38 +1065,37 @@ const esc = s => String(s??"").replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;","
 const priceFor = (p,vol)=> vol==="50" ? Math.round(p.price_crc*0.62/1000)*1000 : Number(p.price_crc);
 const waLink = (msg)=> "https://wa.me/"+String(state.whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg);
 
-/* Branded SVG bottle placeholder — 3 silhouettes by category, seeded variety */
-const ACCENTS = { designer:"#f5c518", niche:"#ded7c6", arabic:"#e63946" };
+/* Branded SVG bottle placeholder — minimal dark line-art on transparent,
+   tuned for the light product tile (renders cleanly under mix-blend multiply).
+   3 silhouettes by category for subtle variety. */
+const INK = "#1b1b1b", GLASS = "#d8d8d8";
 function bottleArt(category, seed){
-  const a = ACCENTS[category] || "#f5c518";
   const s = String(seed||"00");
   const n = (s.charCodeAt(s.length-1)||50);
-  const off = (n%5)*6 - 12;                 // splatter jitter
-  const batch = ("0"+((n%30)+1)).slice(-2); // etched batch no.
-  const splat = `<g fill='${a}' opacity='.09'><circle cx='${64+off}' cy='86' r='42'/><circle cx='${300-off}' cy='128' r='24'/><circle cx='296' cy='366' r='34'/><circle cx='${70+off}' cy='372' r='20'/></g>`;
+  const batch = ("0"+((n%30)+1)).slice(-2);
   let bottle;
   if(category==="niche"){
-    bottle = `<rect x='128' y='66' width='104' height='30' fill='${a}'/>`
-      + `<rect x='108' y='94' width='144' height='26' fill='#0d0d0d'/>`
-      + `<rect x='94' y='118' width='172' height='250' rx='4' fill='#16161a' stroke='${a}' stroke-width='2'/>`
-      + `<rect x='118' y='178' width='124' height='130' fill='none' stroke='${a}' stroke-opacity='.4'/>`;
+    bottle = `<rect x='128' y='66' width='104' height='30' fill='${INK}'/>`
+      + `<rect x='108' y='94' width='144' height='26' fill='${INK}'/>`
+      + `<rect x='94' y='118' width='172' height='250' rx='4' fill='${GLASS}' stroke='${INK}' stroke-width='2'/>`
+      + `<rect x='118' y='178' width='124' height='130' fill='none' stroke='${INK}' stroke-opacity='.55'/>`;
   } else if(category==="arabic"){
-    bottle = `<path d='M163 40 Q180 16 197 40 L197 70 L163 70 Z' fill='${a}'/>`
-      + `<rect x='171' y='66' width='18' height='26' fill='#0d0d0d'/>`
-      + `<path d='M118 112 Q180 86 242 112 L252 360 Q180 394 108 360 Z' fill='#16161a' stroke='${a}' stroke-width='2'/>`
-      + `<rect x='116' y='214' width='128' height='15' fill='${a}' opacity='.85'/>`
-      + `<rect x='128' y='250' width='104' height='80' fill='none' stroke='${a}' stroke-opacity='.4'/>`;
+    bottle = `<path d='M163 40 Q180 16 197 40 L197 70 L163 70 Z' fill='${INK}'/>`
+      + `<rect x='171' y='66' width='18' height='26' fill='${INK}'/>`
+      + `<path d='M118 112 Q180 86 242 112 L252 360 Q180 394 108 360 Z' fill='${GLASS}' stroke='${INK}' stroke-width='2'/>`
+      + `<rect x='116' y='214' width='128' height='14' fill='${INK}'/>`
+      + `<rect x='128' y='250' width='104' height='80' fill='none' stroke='${INK}' stroke-opacity='.55'/>`;
   } else { /* designer */
-    bottle = `<rect x='150' y='40' width='60' height='44' fill='${a}'/>`
-      + `<rect x='168' y='80' width='24' height='26' fill='#0d0d0d'/>`
-      + `<rect x='110' y='104' width='140' height='300' rx='8' fill='#16161a' stroke='${a}' stroke-width='2'/>`
-      + `<rect x='132' y='158' width='96' height='150' fill='none' stroke='${a}' stroke-opacity='.4'/>`;
+    bottle = `<rect x='150' y='40' width='60' height='44' fill='${INK}'/>`
+      + `<rect x='168' y='80' width='24' height='26' fill='${INK}'/>`
+      + `<rect x='110' y='104' width='140' height='300' rx='8' fill='${GLASS}' stroke='${INK}' stroke-width='2'/>`
+      + `<rect x='132' y='158' width='96' height='150' fill='none' stroke='${INK}' stroke-opacity='.55'/>`;
   }
-  const label = `<text x='180' y='208' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='19' font-weight='700' letter-spacing='5' fill='${a}'>DRIPX</text>`
-    + `<text x='180' y='230' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='9' letter-spacing='3' fill='#9a9a9a'>EAU DE PARFUM</text>`
-    + `<text x='180' y='292' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='10' letter-spacing='4' fill='${a}' opacity='.7'>${category.toUpperCase()}</text>`
-    + `<text x='180' y='312' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='8' letter-spacing='2' fill='#6a6a6a'>N°${batch} · LTD</text>`;
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 430'>${splat}${bottle}${label}</svg>`;
+  const label = `<text x='180' y='208' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='19' font-weight='700' letter-spacing='5' fill='${INK}'>DRIPX</text>`
+    + `<text x='180' y='230' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='9' letter-spacing='3' fill='#666'>EAU DE PARFUM</text>`
+    + `<text x='180' y='292' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='10' letter-spacing='4' fill='${INK}' opacity='.7'>${category.toUpperCase()}</text>`
+    + `<text x='180' y='312' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='8' letter-spacing='2' fill='#888'>N°${batch}</text>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 430'>${bottle}${label}</svg>`;
   return "data:image/svg+xml," + encodeURIComponent(svg);
 }
 function imgSrc(p){ return (p.image_url && p.image_url.trim()) ? p.image_url : bottleArt(p.category, p.id); }
@@ -1239,14 +1123,7 @@ function applyI18n(){
 }
 
 /* ---------------- MARQUEE ---------------- */
-function buildMarquee(){
-  const items = state.lang==="es"
-    ? ["DESIGNER","NICHE","ÁRABE","EXCLUSIVO","STOCK LIMITADO","THE DRIP IS REAL"]
-    : ["DESIGNER","NICHE","ARABIC","EXCLUSIVE","LIMITED STOCK","THE DRIP IS REAL"];
-  let one="";
-  items.forEach(x=> one += `<span>${esc(x)}</span><span class="dot">·</span>`);
-  $("#marqueeTrack").innerHTML = one+one; // duplicate for seamless loop
-}
+function buildMarquee(){ const el=$("#marqueeTrack"); if(!el) return; /* ticker removed in B&W redesign */ }
 
 /* ---------------- DATA LOAD ---------------- */
 async function loadProducts(){
@@ -1289,7 +1166,7 @@ function persistLocal(){ try{ localStorage.setItem(LS.prod, JSON.stringify(state
 /* ---------------- CATALOG RENDER ---------------- */
 function renderSkeleton(){
   const g=$("#grid"); let h="";
-  for(let i=0;i<6;i++) h+=`<div class="skeleton"><div class="sk sk-media"></div><div class="sk sk-line w40"></div><div class="sk sk-line w80"></div><div class="sk sk-line w60"></div></div>`;
+  for(let i=0;i<6;i++) h+=`<div class="skeleton"><div class="sk sk-media"></div><div class="sk-pad"><div class="sk sk-line w40"></div><div class="sk sk-line w80"></div><div class="sk sk-line w60"></div></div></div>`;
   g.innerHTML=h;
   $("#filterCount").textContent=t("loading");
 }
@@ -1308,24 +1185,24 @@ function renderCatalog(){
 }
 function cardHTML(p){
   const cat=p.category;
-  const stamp = p.limited ? `<span class="stamp">${t("limited")}</span>` : "";
-  const badge = `<span class="badge badge-cat badge-${cat}">${cat==="arabic"?(state.lang==="es"?"Árabe":"Arabic"):cat.charAt(0).toUpperCase()+cat.slice(1)}</span>`;
+  const catLabel = cat==="arabic" ? (state.lang==="es"?"Árabe":"Arabic") : cat.charAt(0).toUpperCase()+cat.slice(1);
   const foot = p.in_stock
     ? `<span class="card-price">${fmt(p.price_crc)}</span>`
     : `<span class="card-soldout">${t("soldout")}</span>`;
   const addBtn = p.in_stock
-    ? `<button class="card-add" data-add="${p.id}"><svg viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M216,40H40A16,16,0,0,0,24,56V72a16,16,0,0,0,16,16H40l11.2,99.7A24,24,0,0,0,75,208H181a24,24,0,0,0,23.8-20.3L216,88h0a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Z"></path></svg>${t("add_cart")}</button>`
+    ? `<button class="card-add" data-add="${p.id}">${t("add_cart")}</button>`
     : `<button class="card-add" disabled>${t("soldout")}</button>`;
   return `<article class="card" data-cat="${cat}">
-    ${stamp}
     <div class="card-media">
-      ${badge}
       <img src="${esc(imgSrc(p))}" alt="${esc(p.brand)} ${esc(p.name)}" loading="lazy" data-cat="${cat}" data-seed="${esc(p.id)}" onerror="dripxImgFallback(this)" />
     </div>
-    <span class="card-brand">${esc(p.brand)}</span>
-    <h3 class="card-name">${esc(p.name)}</h3>
-    <div class="card-foot">
-      ${foot}
+    <div class="card-body">
+      <div class="card-top">
+        <span class="card-brand">${esc(p.brand)}</span>
+        <span class="badge badge-cat">${catLabel}</span>
+      </div>
+      <h3 class="card-name">${esc(p.name)}</h3>
+      <div class="card-foot">${foot}</div>
       <div class="card-actions">
         ${addBtn}
         <button class="card-view" data-view="${p.id}">${t("view")}</button>
@@ -1365,8 +1242,7 @@ function openModal(id){
   const p = state.products.find(x=>x.id===id); if(!p) return;
   state.current=p; state.volume="100"; state.qty=1;
   const cat=p.category;
-  const stamp = p.limited ? `<span class="stamp">${t("limited")}</span>` : "";
-  const badge = `<span class="badge badge-cat badge-${cat}">${cat==="arabic"?(state.lang==="es"?"Árabe":"Arabic"):cat.charAt(0).toUpperCase()+cat.slice(1)}</span>`;
+  const catLabel = cat==="arabic" ? (state.lang==="es"?"Árabe":"Arabic") : cat.charAt(0).toUpperCase()+cat.slice(1);
   const desc = state.lang==="es" ? p.description_es : p.description_en;
   const occ = (p.occasions||[]).map(o=>`<span class="chip on">${esc((I18N[state.lang].occ[o])||o)}</span>`).join("");
   const sea = (p.seasons||[]).map(s=>`<span class="chip season on">${esc((I18N[state.lang].sea[s])||s)}</span>`).join("");
@@ -1375,13 +1251,15 @@ function openModal(id){
   $("#modal").innerHTML = `
     <button class="modal-close" id="modalClose" aria-label="Close"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button>
     <div class="modal-media">
-      ${stamp}${badge}
       <img src="${esc(imgSrc(p))}" alt="${esc(p.name)}" data-cat="${cat}" data-seed="${esc(p.id)}" onerror="dripxImgFallback(this)" />
     </div>
     <div class="modal-info">
       <span class="modal-brand">${esc(p.brand)}</span>
       <h2 class="modal-name">${esc(p.name)}</h2>
-      <span class="modal-family">${esc(trFamily(p.family))}</span>
+      <div class="modal-tagrow">
+        <span class="badge badge-cat">${catLabel}</span>
+        <span class="modal-family">${esc(trFamily(p.family))}</span>
+      </div>
       <div class="modal-price" id="modalPrice">${fmt(price100)}</div>
       <p class="modal-desc">${esc(desc)}</p>
 
@@ -1743,11 +1621,11 @@ function wireWaLinks(){
 function heroAnim(){
   if(!window.gsap) return;
   const tl = gsap.timeline({ defaults:{ ease:"power3.out" } });
-  tl.fromTo(".hero-eyebrow", { opacity:0, x:-30 }, { opacity:1, x:0, duration:.6 })
-    .fromTo(".hero-line", { clipPath:"inset(0 100% 0 0)", x:-30 }, { clipPath:"inset(0 0% 0 0)", x:0, duration:1, stagger:.18 }, "-=.2")
-    .fromTo(".hero-tag", { opacity:0, y:20 }, { opacity:1, y:0, duration:.6 }, "-=.4")
-    .fromTo(".hero-cta", { opacity:0, y:20 }, { opacity:1, y:0, duration:.6 }, "-=.4")
-    .fromTo(".hero-scroll", { opacity:0 }, { opacity:1, duration:.6 }, "-=.2");
+  tl.fromTo(".hero-logo", { opacity:0, y:26, scale:.96 }, { opacity:1, y:0, scale:1, duration:1 })
+    .fromTo(".hero-line", { opacity:0, y:48 }, { opacity:1, y:0, duration:.9, stagger:.18 }, "-=.45")
+    .fromTo(".hero-tag", { opacity:0, y:22 }, { opacity:1, y:0, duration:.7 }, "-=.4")
+    .fromTo(".hero-cta", { opacity:0, y:22 }, { opacity:1, y:0, duration:.7 }, "-=.45")
+    .fromTo(".hero-scroll", { opacity:0 }, { opacity:1, duration:.6 }, "-=.3");
 }
 function sectionReveals(){
   if(!window.gsap || !window.ScrollTrigger) return;
@@ -1796,8 +1674,12 @@ function bind(){
   // encargos form
   $("#encargoForm").addEventListener("submit", submitEncargo);
 
-  // floating buttons + scroll behaviors
-  window.addEventListener("scroll", ()=>{ $("#fabTop").classList.toggle("show", window.scrollY>500); }, { passive:true });
+  // nav border-on-scroll + floating buttons
+  const navEl=$(".nav");
+  window.addEventListener("scroll", ()=>{
+    if(navEl) navEl.classList.toggle("scrolled", window.scrollY>8);
+    $("#fabTop").classList.toggle("show", window.scrollY>500);
+  }, { passive:true });
   $("#fabTop").onclick=()=> window.scrollTo({ top:0, behavior:"smooth" });
 
   // ESC closes overlays
