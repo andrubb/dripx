@@ -30,6 +30,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<!-- tsParticles (slim) — atmospheric hero dust -->
+<script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2/tsparticles.slim.bundle.min.js" defer></script>
 
 <style>
 /* ====================================================================
@@ -71,7 +73,7 @@
    RESET / BASE
 ==================================================================== */
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; background:#0a0a0a; }
 body{
   background:var(--bg);
   color:var(--text);
@@ -203,28 +205,28 @@ ul{ list-style:none; }
    HERO
 ==================================================================== */
 .hero{
-  position:relative; min-height:100svh; overflow:hidden;
+  position:relative; min-height:100svh; overflow:hidden; background:#0a0a0a;
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
   padding:calc(var(--nav-h) + 2rem) var(--gut) 5rem;
 }
-/* one restrained atmospheric touch — a faint monochrome halo behind the logo */
-.hero::before{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(60% 50% at 50% 38%, rgba(255,255,255,.05), transparent 70%);
-}
-.hero > *{ position:relative; z-index:2; }
+/* hero content above the particle field */
+.hero > *{ position:relative; z-index:1; }
+/* tsParticles canvas — dust in a streetlight, behind everything */
+.hero-particles{ position:absolute; inset:0; z-index:0; pointer-events:none; }
 .hero-logo{ width:clamp(190px,32vw,440px); height:auto; margin:0 auto clamp(1.4rem,3.5vw,2.4rem); }
 .hero h1{ font-family:var(--f-display); font-weight:400; letter-spacing:.015em; color:var(--white); }
 .hero-line{ display:block; line-height:.88; font-size:clamp(2.5rem,9vw,8.4rem); }
 .hero-line.l2{ color:var(--white); }
 .hero-tag{ font-style:italic; font-family:var(--f-body); font-size:clamp(1rem,2.2vw,1.4rem); color:var(--muted); margin-top:clamp(1.2rem,3vw,1.8rem); }
 .hero-cta{ margin-top:clamp(1.8rem,4vw,2.6rem); display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:center; }
-.hero-scroll{ position:absolute; left:50%; bottom:1.6rem; transform:translateX(-50%); z-index:2;
+.hero-scroll{ position:absolute; left:50%; bottom:2.5rem; transform:translateX(-50%); z-index:2;
   display:flex; flex-direction:column; align-items:center; gap:.5rem;
-  font-family:var(--f-display); letter-spacing:.28em; color:var(--muted); font-size:.85rem; transition:color .3s; }
+  font-family:var(--f-display); letter-spacing:.28em; color:var(--muted); font-size:.85rem; transition:color .3s;
+  animation:heroBounce 2.2s var(--ease) infinite; }
 .hero-scroll:hover{ color:var(--white); }
 .hero-scroll .arrow{ width:1px; height:42px; background:linear-gradient(var(--white),transparent); animation:scrolly 1.9s var(--ease) infinite; transform-origin:top; }
 @keyframes scrolly{ 0%{ transform:scaleY(0); } 45%{ transform:scaleY(1);} 100%{ transform:scaleY(0); transform-origin:bottom;} }
+@keyframes heroBounce{ 0%,100%{ transform:translateX(-50%) translateY(0);} 50%{ transform:translateX(-50%) translateY(8px);} }
 
 /* ====================================================================
    SECTION SHELL
@@ -238,58 +240,52 @@ ul{ list-style:none; }
 /* ====================================================================
    CATALOG  — filter bar + grid + cards
 ==================================================================== */
-.filter-bar{ display:flex; flex-wrap:wrap; gap:.4rem 1.9rem; align-items:center; margin-bottom:2.6rem; border-bottom:1px solid var(--border); padding-bottom:1.1rem; }
+.filter-bar{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:2.6rem; }
 .filter-pill{
-  font-family:var(--f-display); font-size:1.35rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted); position:relative; padding:.2rem .1rem; transition:color .3s var(--ease);
+  font-family:var(--f-display); font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--white); background:transparent; border:1px solid rgba(255,255,255,.3); border-radius:0;
+  padding:.45rem 1.15rem; transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
 }
-.filter-pill::after{
-  content:""; position:absolute; left:0; right:0; bottom:-1.15rem; height:2px; background:var(--white);
-  transform:scaleX(0); transform-origin:left; transition:transform .4s var(--ease);
-}
-.filter-pill:hover{ color:var(--text); }
-.filter-pill.active{ color:var(--white); }
-.filter-pill.active::after{ transform:scaleX(1); }
+.filter-pill:hover{ border-color:var(--white); }
+.filter-pill.active{ background:var(--white); color:#000; border-color:var(--white); }
 .filter-count{ margin-left:auto; font-family:var(--f-body); letter-spacing:.18em; text-transform:uppercase; color:var(--muted); font-size:.78rem; }
 
 .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
 
 .card{
-  position:relative; background:var(--surface); border:1px solid var(--border);
+  position:relative; background:var(--surface); border:1px solid #1a1a1a;
   display:flex; flex-direction:column; overflow:hidden;
-  transition:transform .5s var(--ease), border-color .4s var(--ease), box-shadow .5s var(--ease);
+  transition:transform .3s ease, border-color .3s ease;
 }
-.card:hover{ transform:translateY(-4px); border-color:var(--line); box-shadow:0 22px 48px -28px rgba(0,0,0,.95); }
+.card:hover{ transform:translateY(-6px); border-color:rgba(255,255,255,.25); }
 
-/* light product tile — white-bg photos melt into it via multiply */
-.card-media{ position:relative; aspect-ratio:1/1.05; background:var(--tile); overflow:hidden; }
-.card-media img{ width:100%; height:100%; object-fit:contain; padding:1.4rem; mix-blend-mode:multiply; transition:transform .6s var(--ease); }
+/* dark product tile — bottle centered, contained */
+.card-media{ position:relative; aspect-ratio:3/4; background:#0d0d0d; overflow:hidden; }
+.card-media img{ width:100%; height:100%; object-fit:contain; padding:1rem; transition:transform .5s var(--ease); }
 .card:hover .card-media img{ transform:scale(1.05); }
 
-.card-body{ display:flex; flex-direction:column; flex:1; padding:1.15rem 1.25rem 1.3rem; }
-.card-top{ display:flex; align-items:center; justify-content:space-between; gap:.7rem; margin-bottom:.55rem; }
-
-/* simple white-outline category pill (Bebas) */
-.badge{ font-family:var(--f-display); font-size:.92rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--white); border:1px solid var(--border); padding:.12rem .58rem; line-height:1.3; white-space:nowrap; }
-.card-brand{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
-.card-name{ font-family:var(--f-display); font-size:1.95rem; letter-spacing:.03em; line-height:1; color:var(--white); margin-bottom:1rem; }
-.card-foot{ margin-top:auto; display:flex; align-items:baseline; justify-content:space-between; gap:.8rem; }
-.card-price{ font-family:var(--f-body); font-weight:500; font-size:1.05rem; letter-spacing:.02em; color:var(--white); }
+.card-body{ display:flex; flex-direction:column; flex:1; padding:1.25rem; }
+.card-top{ display:flex; align-items:baseline; justify-content:space-between; gap:.7rem; margin-bottom:.5rem; }
+.card-brand{ font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#666; }
+.card-cat{ font-family:var(--f-accent); font-size:10px; color:#888; white-space:nowrap; }
+.card-name{ font-family:var(--f-display); font-size:1.4rem; letter-spacing:.05em; line-height:1.05; color:#f0f0f0; margin-bottom:1rem; }
+.card-foot{ margin-top:auto; }
+.card-price{ font-family:var(--f-body); font-weight:500; font-size:1rem; letter-spacing:.02em; color:#fff; }
 .card-soldout{ font-family:var(--f-body); font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
-.card-actions{ display:grid; grid-template-columns:1fr auto; gap:.5rem; margin-top:.95rem; }
+.card-actions{ display:flex; gap:8px; margin-top:1rem; }
 .card-add{
-  font-family:var(--f-display); font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase;
-  background:transparent; color:var(--white); border:1px solid var(--white); padding:.62rem 1rem;
-  transition:.35s var(--ease); display:flex; align-items:center; justify-content:center; gap:.5rem;
+  flex:1; font-family:var(--f-display); font-size:1.1rem; letter-spacing:.1em; text-transform:uppercase;
+  background:var(--white); color:#000; border:1px solid var(--white); border-radius:0; padding:.7rem 1rem;
+  transition:.3s var(--ease); display:flex; align-items:center; justify-content:center;
 }
-.card-add:hover{ background:var(--white); color:#000; }
+.card-add:hover{ background:#0a0a0a; color:var(--white); }
 .card-add[disabled]{ background:transparent; border-color:var(--border); color:#555; cursor:not-allowed; }
 .card-view{
-  font-family:var(--f-display); font-size:1.1rem; letter-spacing:.14em; text-transform:uppercase;
-  border:1px solid var(--border); color:var(--muted); padding:.62rem 1rem; transition:.35s var(--ease);
+  width:44px; height:44px; flex:none; border:1px solid var(--white); color:var(--white); border-radius:0;
+  display:grid; place-items:center; transition:.3s var(--ease);
 }
-.card-view:hover{ border-color:var(--white); color:var(--white); }
+.card-view:hover{ background:var(--white); color:#000; }
+.card-view svg{ width:18px; height:18px; }
 
 /* Skeleton loading */
 .skeleton{ background:var(--surface); border:1px solid var(--border); overflow:hidden; }
@@ -459,11 +455,12 @@ ul{ list-style:none; }
 /* ====================================================================
    FLOATING WHATSAPP + BACK TO TOP
 ==================================================================== */
-.fab-wa{ position:fixed; right:20px; bottom:20px; z-index:500; width:56px; height:56px; border-radius:50%; background:#0a0a0a; border:1px solid var(--white); display:grid; place-items:center; animation:wapulse 2.6s infinite; transition:background .3s, color .3s; }
-.fab-wa svg{ width:28px; height:28px; color:var(--white); }
-.fab-wa:hover{ background:var(--white); }
-.fab-wa:hover svg{ color:#000; }
-@keyframes wapulse{ 0%{ box-shadow:0 0 0 0 rgba(255,255,255,.32);} 70%{ box-shadow:0 0 0 14px rgba(255,255,255,0);} 100%{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+.fab-wa{ position:fixed; right:2rem; bottom:2rem; z-index:999; width:56px; height:56px; border-radius:50%; background:var(--white); display:grid; place-items:center; box-shadow:0 4px 20px rgba(255,255,255,.15); transition:background .25s var(--ease), transform .25s var(--ease); }
+.fab-wa svg{ width:28px; height:28px; color:#0a0a0a; }
+.fab-wa:hover{ background:#0a0a0a; transform:scale(1.08); }
+.fab-wa:hover svg{ color:var(--white); }
+.fab-wa::after{ content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; box-shadow:0 0 0 0 rgba(255,255,255,.45); animation:whatsapp-pulse 2.5s ease-out infinite; }
+@keyframes whatsapp-pulse{ 0%{ box-shadow:0 0 0 0 rgba(255,255,255,.45);} 70%{ box-shadow:0 0 0 16px rgba(255,255,255,0);} 100%{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
 .fab-top{ position:fixed; right:25px; bottom:90px; z-index:500; width:46px; height:46px; background:var(--surface); border:1px solid var(--border); display:grid; place-items:center; color:var(--white); opacity:0; visibility:hidden; transform:translateY(12px); transition:.35s var(--ease); }
 .fab-top.show{ opacity:1; visibility:visible; transform:translateY(0); }
 .fab-top:hover{ background:var(--white); color:#000; }
@@ -656,7 +653,9 @@ ul{ list-style:none; }
 @media (max-width:768px){
   /* modal slides up from bottom on mobile */
   .modal-overlay{ align-items:flex-end; padding:0; }
-  .modal{ max-height:92svh; border:none; border-top:2px solid var(--gold); }
+  .modal{ max-height:92svh; border:none; border-top:2px solid var(--white); }
+  .fab-wa{ width:48px; height:48px; right:1.4rem; bottom:1.4rem; }
+  .fab-wa svg{ width:24px; height:24px; }
 }
 @media (prefers-reduced-motion:reduce){
   *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
@@ -718,6 +717,7 @@ ul{ list-style:none; }
 
 <!-- ================= HERO ================= -->
 <section class="hero">
+  <div id="tsparticles" class="hero-particles" aria-hidden="true"></div>
   <!-- the logo IS the statement -->
   <img class="hero-logo" src="./assets/dripx-logo.png" alt="DripX" onerror="this.style.display='none'" />
   <h1>
@@ -926,7 +926,7 @@ const I18N = {
     cat_eyebrow:"La Colección", cat_title:"EL CATÁLOGO",
     cat_sub:"Pura candela seleccionada a mano. Íconos designer, joyas niche y bombas árabes — cada frasco se gana su lugar en la pared.",
     filter_all:"Todos", filter_designer:"Designer", filter_niche:"Niche", filter_arabic:"Árabe",
-    add_cart:"Agregar", view:"Ver", soldout:"Agotado", limited:"LIMITED",
+    add_cart:"Al Carrito", view:"Ver", soldout:"Agotado", limited:"LIMITED",
     enc_eyebrow:"Encargos", enc_title1:"¿NO ENCUENTRAS", enc_title2:"TU DRIP?",
     enc_copy:"Traemos de todo el mundo. Si existe, lo conseguimos. Déjanos tu pedido y lo hacemos realidad.",
     enc_connect:"// el conecte directo",
@@ -951,7 +951,7 @@ const I18N = {
     cat_eyebrow:"The Collection", cat_title:"THE CATALOG",
     cat_sub:"Hand-picked heat. Designer icons, niche grails and arabic bombs — every bottle earns its spot on the wall.",
     filter_all:"All", filter_designer:"Designer", filter_niche:"Niche", filter_arabic:"Arabic",
-    add_cart:"Add", view:"View", soldout:"Sold Out", limited:"LIMITED",
+    add_cart:"Add to Cart", view:"View", soldout:"Sold Out", limited:"LIMITED",
     enc_eyebrow:"Special Orders", enc_title1:"CAN'T FIND", enc_title2:"YOUR DRIP?",
     enc_copy:"We source globally. If it exists, we can get it. Drop your request and we'll make it happen.",
     enc_connect:"// the back-channel connect",
@@ -1179,7 +1179,7 @@ const waLink = (msg)=> "https://wa.me/"+String(state.whatsapp).replace(/\D/g,"")
 /* Branded SVG bottle placeholder — minimal dark line-art on transparent,
    tuned for the light product tile (renders cleanly under mix-blend multiply).
    3 silhouettes by category for subtle variety. */
-const INK = "#1b1b1b", GLASS = "#d8d8d8";
+const INK = "#8f8f8f", GLASS = "none";
 function bottleArt(category, seed){
   const s = String(seed||"00");
   const n = (s.charCodeAt(s.length-1)||50);
@@ -1203,7 +1203,7 @@ function bottleArt(category, seed){
       + `<rect x='132' y='158' width='96' height='150' fill='none' stroke='${INK}' stroke-opacity='.55'/>`;
   }
   const label = `<text x='180' y='208' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='19' font-weight='700' letter-spacing='5' fill='${INK}'>DRIPX</text>`
-    + `<text x='180' y='230' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='9' letter-spacing='3' fill='#666'>EAU DE PARFUM</text>`
+    + `<text x='180' y='230' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='9' letter-spacing='3' fill='#8f8f8f'>EAU DE PARFUM</text>`
     + `<text x='180' y='292' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='10' letter-spacing='4' fill='${INK}' opacity='.7'>${category.toUpperCase()}</text>`
     + `<text x='180' y='312' text-anchor='middle' font-family='Helvetica,Arial,sans-serif' font-size='8' letter-spacing='2' fill='#888'>N°${batch}</text>`;
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 430'>${bottle}${label}</svg>`;
@@ -1312,13 +1312,13 @@ function cardHTML(p){
     <div class="card-body">
       <div class="card-top">
         <span class="card-brand">${esc(p.brand)}</span>
-        <span class="badge badge-cat">${catLabel}</span>
+        <span class="card-cat">${catLabel}</span>
       </div>
       <h3 class="card-name">${esc(p.name)}</h3>
       <div class="card-foot">${foot}</div>
       <div class="card-actions">
         ${addBtn}
-        <button class="card-view" data-view="${p.id}">${t("view")}</button>
+        <button class="card-view" data-view="${p.id}" aria-label="${t("view")}"><svg viewBox="0 0 256 256" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button>
       </div>
     </div>
   </article>`;
@@ -1885,6 +1885,26 @@ function heroAnim(){
     .fromTo(".hero-cta", { opacity:0, y:22 }, { opacity:1, y:0, duration:.7 }, "-=.45")
     .fromTo(".hero-scroll", { opacity:0 }, { opacity:1, duration:.6 }, "-=.3");
 }
+/* ---------------- HERO PARTICLES (tsParticles) ---------------- */
+function initParticles(){
+  if(!window.tsParticles) return;
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const options = {
+    fullScreen:{ enable:false },
+    fpsLimit:60,
+    detectRetina:true,
+    particles:{
+      number:{ value:60, density:{ enable:true, area:900 } },
+      color:{ value:"#ffffff" },
+      opacity:{ value:0.15 },
+      size:{ value:{ min:1.5, max:2.5 } },
+      links:{ enable:false },
+      move:{ enable:true, direction:"top", speed:0.3, straight:false, random:true, outModes:{ default:"out" } }
+    }
+  };
+  try{ tsParticles.load({ id:"tsparticles", options }); }
+  catch(e){ try{ tsParticles.load("tsparticles", options); }catch(_){ } }
+}
 function sectionReveals(){
   if(!window.gsap || !window.ScrollTrigger) return;
   gsap.utils.toArray(".section-head, .encargos-copy, .form").forEach(el=>{
@@ -1945,11 +1965,13 @@ function bind(){
     else if($("#drawerOverlay").classList.contains("open")) closeCart();
     else if($("#mnav").classList.contains("open")) $("#closeMnav").click(); } });
 
-  // admin: hash + triple-click footer logo
+  // admin: 3 ways in — #admin hash · triple-click footer logo · double-click nav logo
   window.addEventListener("hashchange", checkAdminHash);
   let clicks=0, timer=null;
   $("#footerLogo").addEventListener("click", ()=>{ clicks++; clearTimeout(timer);
     timer=setTimeout(()=>clicks=0,600); if(clicks>=3){ clicks=0; location.hash="admin"; } });
+  const navLogo=$(".nav-logo img");
+  if(navLogo) navLogo.addEventListener("dblclick", e=>{ e.preventDefault(); openAdmin(); });
 }
 function checkAdminHash(){ if(location.hash==="#admin") openAdmin(); }
 
@@ -1964,6 +1986,7 @@ function init(){
   // animations once libs are ready (scripts are deferred)
   window.addEventListener("load", ()=>{
     if(window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+    initParticles();
     heroAnim();
     sectionReveals();
     if(window.gsap && window.ScrollTrigger) revealCards();
